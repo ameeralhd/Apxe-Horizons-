@@ -19,6 +19,8 @@ services:
         fromDatabase:
           name: apex-horizons-db
           property: connectionString
+      - key: GOOGLE_CLIENT_ID
+        value: 608132465176-igsovdtn4bkc8qt6up0ik8s540qqb9cl.apps.googleusercontent.com
 
   # Frontend Static Site
   - type: web
@@ -30,6 +32,8 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://apex-horizons-api.onrender.com
+      - key: VITE_GOOGLE_CLIENT_ID
+        value: 608132465176-igsovdtn4bkc8qt6up0ik8s540qqb9cl.apps.googleusercontent.com
     routes:
       - type: rewrite
         source: /*
