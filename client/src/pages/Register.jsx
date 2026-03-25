@@ -4,6 +4,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { User, Mail, Phone, Lock, UserPlus, ArrowLeft, Check, X, Chrome } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { countries } from '../data/countries';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -59,7 +60,7 @@ export default function Register() {
         }
 
         try {
-            const res = await fetch('/api/auth/register', {
+            const res = await fetch(getApiUrl('/api/auth/register'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -94,7 +95,7 @@ export default function Register() {
         setLoading(true);
         setErrors({});
         try {
-            const res = await fetch('/api/auth/google', {
+            const res = await fetch(getApiUrl('/api/auth/google'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: tokenResponse.access_token })

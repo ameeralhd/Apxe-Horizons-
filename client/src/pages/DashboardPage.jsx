@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Calendar, Clock, DollarSign, User, FileText, ChevronRight } from 'lucide-react';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function DashboardPage() {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function DashboardPage() {
             return;
         }
 
-        fetch('/api/appointments', {
+        fetch(getApiUrl('/api/appointments'), {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.json())

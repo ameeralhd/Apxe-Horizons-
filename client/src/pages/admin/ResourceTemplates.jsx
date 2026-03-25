@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Plus, Trash2, Edit2, FileText, Upload, X } from 'lucide-react';
 import '../../admin-enhanced.css';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ResourceTemplates() {
     const [templates, setTemplates] = useState([]);
@@ -23,7 +24,7 @@ export default function ResourceTemplates() {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/templates', {
+            const res = await fetch(getApiUrl('/api/templates'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -74,7 +75,7 @@ export default function ResourceTemplates() {
         
         try {
             if (isEditing) {
-                const res = await fetch(`/api/templates/${currentTemplate.id}`, {
+                const res = await fetch(getApiUrl(`/api/templates/${currentTemplate.id}`), {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -92,7 +93,7 @@ export default function ResourceTemplates() {
                 data.append('category', formData.category);
                 data.append('file', formData.file);
 
-                const res = await fetch('/api/templates', {
+                const res = await fetch(getApiUrl('/api/templates'), {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` },
                     body: data
@@ -110,7 +111,7 @@ export default function ResourceTemplates() {
         
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`/api/templates/${id}`, {
+            const res = await fetch(getApiUrl(`/api/templates/${id}`), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

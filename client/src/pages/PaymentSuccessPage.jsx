@@ -2,6 +2,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Check, ArrowRight, Download, Calendar, User, ShoppingBag, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function PaymentSuccessPage() {
     const navigate = useNavigate();
@@ -171,7 +172,7 @@ export default function PaymentSuccessPage() {
 
                                     try {
                                         const token = localStorage.getItem('token');
-                                        const response = await fetch(`/api/appointments/${bookingData.id}/receipt`, {
+                                        const response = await fetch(getApiUrl(`/api/appointments/${bookingData.id}/receipt`), {
                                             headers: { 'Authorization': `Bearer ${token}` }
                                         });
                                         const blob = await response.blob();

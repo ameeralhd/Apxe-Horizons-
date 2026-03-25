@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Calendar, User, ChevronRight, Star, CheckCircle2 } from 'lucide-react';
 import ReviewModal from '../components/ReviewModal';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function MyBookingsPage() {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function MyBookingsPage() {
 
     const fetchBookings = () => {
         const token = localStorage.getItem('token');
-        fetch('/api/appointments', {
+        fetch(getApiUrl('/api/appointments'), {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.json())

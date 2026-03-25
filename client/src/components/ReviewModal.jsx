@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star, X, CheckCircle2, Award, Zap, MessageSquare, Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { getApiUrl } from '../utils/apiConfig';
 
 const TRAIT_TAGS = [
     { id: 'Knowledgeable', icon: <Award size={14} />, label: 'Knowledgeable' },
@@ -36,7 +37,7 @@ export default function ReviewModal({ appointment, onClose, onSuccess }) {
 
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch('/api/reviews/submit', {
+            const res = await fetch(getApiUrl('/api/reviews/submit'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

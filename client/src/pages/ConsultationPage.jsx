@@ -1,3 +1,4 @@
+import { getApiUrl } from '../utils/apiConfig';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -59,7 +60,7 @@ export default function ConsultationPage() {
 
             try {
                 // 1. Fetch User Path
-                const pathRes = await fetch('/api/documents/path', {
+                const pathRes = await fetch(getApiUrl('/api/documents/path'), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 let userPath = { category: 'scholarship', type: 'Undergraduate', country: 'USA' };
@@ -75,7 +76,7 @@ export default function ConsultationPage() {
                     query.append('type', userPath.type);
                 }
 
-                const reqRes = await fetch(`/api/documents/requirements?${query}`, {
+                const reqRes = await fetch(getApiUrl(`/api/documents/requirements?${query}`), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -99,7 +100,7 @@ export default function ConsultationPage() {
         const fetchConsultants = async () => {
             try {
                 // Add timestamp and headers to prevent caching
-                const res = await fetch(`/api/consultants?t=${Date.now()}`, {
+                const res = await fetch(getApiUrl(`/api/consultants?t=${Date.now()}`), {
                     cache: 'no-store',
                     headers: {
                         'Cache-Control': 'no-cache',
@@ -180,7 +181,7 @@ export default function ConsultationPage() {
         // Sync Verification: Before entering Expert Selection (2) or Scheduling (3), check for remote updates
         if (step === 1 || step === 2) {
             try {
-                const headCheck = await fetch(`/api/consultants?t=${Date.now()}`, { method: 'HEAD', cache: 'no-store' });
+                const headCheck = await fetch(getApiUrl(`/api/consultants?t=${Date.now()}`), { method: 'HEAD', cache: 'no-store' });
                 if (headCheck.status === 401) {
                     localStorage.clear();
                     window.location.href = '/login?expired=true';
@@ -191,7 +192,7 @@ export default function ConsultationPage() {
                 if (currentServerTS && currentServerTS !== lastServerUpdate) {
                     console.warn(`[Elite Sync] Remote data changed (${currentServerTS}). Forcing re-fetch...`);
                     // Call the logic to re-fetch
-                    const res = await fetch(`/api/consultants?t=${Date.now()}`, { cache: 'no-store' });
+                    const res = await fetch(getApiUrl(`/api/consultants?t=${Date.now()}`), { cache: 'no-store' });
                     const data = await res.json();
                     if (Array.isArray(data)) {
                         const normalized = data.map(c => {
@@ -239,7 +240,7 @@ export default function ConsultationPage() {
         try {
             const token = localStorage.getItem('token');
             // [FIX] Use relative URL
-            const res = await fetch('/api/documents/upload', {
+            const res = await fetch(getApiUrl('/api/documents/upload'), {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -274,7 +275,7 @@ export default function ConsultationPage() {
         try {
             setRedirecting(true); // Set redirecting state for UI transition
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/appointments', {
+            const res = await fetch(getApiUrl('/api/appointments'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

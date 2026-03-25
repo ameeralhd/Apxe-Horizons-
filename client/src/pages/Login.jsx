@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Mail, Lock, LogIn, ArrowLeft, Eye, EyeOff, Chrome, CheckCircle2 } from 'lucide-react';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '', rememberMe: false });
@@ -19,7 +20,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const res = await fetch('/api/auth/login', {
+            const res = await fetch(getApiUrl('/api/auth/login'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -64,7 +65,7 @@ export default function Login() {
         setLoading(true);
         setErrors({});
         try {
-            const res = await fetch('/api/auth/google', {
+            const res = await fetch(getApiUrl('/api/auth/google'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: tokenResponse.access_token })

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Upload, FileText, CheckCircle, Calendar, User as UserIcon, Clock, ChevronLeft, ArrowRight } from 'lucide-react';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function BookingFlow({ service, onBack }) {
     const [step, setStep] = useState(1);
@@ -20,7 +21,7 @@ export default function BookingFlow({ service, onBack }) {
 
     useEffect(() => {
         // Mock fetch or real fetch
-        fetch('/api/consultants')
+        fetch(getApiUrl('/api/consultants'))
             .then(res => res.json())
             .then(data => setConsultants(data))
             .catch(err => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Filter, Eye, FileText, Mail, ShieldCheck, Users } from 'lucide-react';
 import '../../admin-enhanced.css';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ApplicantManagement() {
     const [applicants, setApplicants] = useState([]);
@@ -18,7 +19,7 @@ export default function ApplicantManagement() {
         try {
             const token = localStorage.getItem('token');
             const query = new URLSearchParams({ page, search, limit: 20 });
-            const res = await fetch(`/api/admin/applicants?${query}`, {
+            const res = await fetch(getApiUrl(`/api/admin/applicants?${query}`), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 

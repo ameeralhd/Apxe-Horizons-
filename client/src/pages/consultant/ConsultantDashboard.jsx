@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, Calendar, Clock, Save, Eye, Check, X, AlertCircle, Camera } from 'lucide-react';
 import '../../admin-enhanced.css';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ConsultantDashboard() {
     const [profile, setProfile] = useState(null);
@@ -18,7 +19,7 @@ export default function ConsultantDashboard() {
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/consultants/me', {
+            const res = await fetch(getApiUrl('/api/consultants/me'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -56,7 +57,7 @@ export default function ConsultantDashboard() {
                 }
             });
 
-            const res = await fetch('/api/consultants/me', {
+            const res = await fetch(getApiUrl('/api/consultants/me'), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

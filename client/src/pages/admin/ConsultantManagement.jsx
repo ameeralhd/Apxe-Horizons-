@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, User, Calendar, Clock, Save, Eye, MoreVertical, Plus, Check, X, AlertCircle } from 'lucide-react';
 import '../../admin-enhanced.css';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ConsultantManagement() {
     const [consultants, setConsultants] = useState([]);
@@ -18,7 +19,7 @@ export default function ConsultantManagement() {
     const fetchConsultants = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/admin/consultants', {
+            const res = await fetch(getApiUrl('/api/admin/consultants'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -61,7 +62,7 @@ export default function ConsultantManagement() {
             const token = localStorage.getItem('token');
             const newStatus = !consultant.isActive;
 
-            const res = await fetch(`/api/admin/consultants/${consultant.id}/status`, {
+            const res = await fetch(getApiUrl(`/api/admin/consultants/${consultant.id}/status`), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ export default function ConsultantManagement() {
                 ...selectedConsultant,
                 availability // Include the UI availability state
             };
-            const res = await fetch(`/api/admin/consultants/${selectedConsultant.id}`, {
+            const res = await fetch(getApiUrl(`/api/admin/consultants/${selectedConsultant.id}`), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

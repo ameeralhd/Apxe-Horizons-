@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { CreditCard, Download, ChevronRight } from 'lucide-react';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function MyPaymentsPage() {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function MyPaymentsPage() {
             return;
         }
 
-        fetch('/api/appointments', {
+        fetch(getApiUrl('/api/appointments'), {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.json())

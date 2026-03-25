@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, Trash2, MessageSquare, Star, User, UserCheck, Award, Heart, ShieldCheck, Globe } from 'lucide-react';
 import '../../admin-enhanced.css';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ReviewModeration() {
     const [reviews, setReviews] = useState([]);
@@ -15,7 +16,7 @@ export default function ReviewModeration() {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/reviews/all', {
+            const res = await fetch(getApiUrl('/api/reviews/all'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -37,7 +38,7 @@ export default function ReviewModeration() {
     const handleUpdateStatus = async (reviewId, updates) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`/api/reviews/${reviewId}/status`, {
+            const res = await fetch(getApiUrl(`/api/reviews/${reviewId}/status`), {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import ProfileProgress from '../components/Dashboard/ProfileProgress';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function HomePage() {
     const token = localStorage.getItem('token');
@@ -93,7 +94,7 @@ export default function HomePage() {
                 const headers = { 'Authorization': `Bearer ${token}` };
 
                 // Fetch Status (Dynamic Analytics & Alerts)
-                const statusRes = await fetch('/api/dashboard/status', { headers });
+                const statusRes = await fetch(getApiUrl('/api/dashboard/status'), { headers });
                 if (statusRes.status === 401) {
                     localStorage.clear();
                     window.location.href = '/login?expired=true';
@@ -102,15 +103,15 @@ export default function HomePage() {
                 if (statusRes.ok) setDashboardStatus(await statusRes.json());
 
                 // Fetch News Ticker
-                const newsRes = await fetch('/api/dashboard/news/ticker');
+                const newsRes = await fetch(getApiUrl('/api/dashboard/news/ticker'));
                 if (newsRes.ok) setNewsTicker(await newsRes.json());
 
                 // Fetch Elite Unis
-                const eliteRes = await fetch('/api/universities?category=Elite Partner');
+                const eliteRes = await fetch(getApiUrl('/api/universities?category=Elite Partner'));
                 if (eliteRes.ok) setEliteUnis(await eliteRes.json());
 
                 // Fetch Dynamic CMS Content
-                const cmsRes = await fetch('/api/dynamic-content?status=true');
+                const cmsRes = await fetch(getApiUrl('/api/dynamic-content?status=true'));
                 if (cmsRes.ok) {
                     const cmsData = await cmsRes.json();
                     setDiscoveryVideos(cmsData.filter(item => item.category === 'university_discovery'));
@@ -118,18 +119,18 @@ export default function HomePage() {
                 }
 
                 // Keep old videoRes for backward compatibility or if needed, but we'll prioritize CMS
-                const videoRes = await fetch('/api/videos');
+                const videoRes = await fetch(getApiUrl('/api/videos'));
                 if (videoRes.ok) setVideos(await videoRes.json());
 
                 // Fetch Spotlight
-                const spotlightRes = await fetch('/api/universities/spotlight');
+                const spotlightRes = await fetch(getApiUrl('/api/universities/spotlight'));
                 if (spotlightRes.ok) {
                     const spotlightData = await spotlightRes.json();
                     setSpotlight(spotlightData);
                 }
 
                 // Initial Unis (Respect current selection instead of hardcoding Indonesia)
-                const uniRes = await fetch(`/api/universities?country=${countryRef.current}`);
+                const uniRes = await fetch(getApiUrl(`/api/universities?country=${countryRef.current}`));
                 if (uniRes.ok) setUnis(await uniRes.json());
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
@@ -150,7 +151,7 @@ export default function HomePage() {
         setSelectedCountry(country);
         setUnis([]); // Required Fix: Clear previous list so the new list can mount/render cleanly
         try {
-            const res = await fetch(`/api/universities?country=${country}`);
+            const res = await fetch(getApiUrl(`/api/universities?country=${country}`));
             if (res.ok) setUnis(await res.json());
         } catch (err) {
             console.error('Error fetching universities:', err);
@@ -1656,7 +1657,7 @@ function TestimonialCarousel() {
     useEffect(() => {
         const fetchTestimonials = async () => {
             try {
-                const res = await fetch('/api/reviews/testimonials');
+                const res = await fetch(getApiUrl('/api/reviews/testimonials'));
                 if (res.ok) {
                     const data = await res.json();
                     if (data.length > 0) {
@@ -2065,7 +2066,7 @@ function UploadCenter({ isOpen, onClose }) {
                 setProgress(prev => (prev < 90 ? prev + 5 : prev));
             }, 100);
 
-            const res = await fetch('/api/documents/analyze', {
+            const res = await fetch(getApiUrl('/api/documents/analyze'), {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

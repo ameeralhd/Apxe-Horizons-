@@ -13,6 +13,7 @@ import {
     Trash2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ExpertAvailability() {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function ExpertAvailability() {
     const fetchAvailability = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/consultants/me', {
+            const res = await fetch(getApiUrl('/api/consultants/me'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -49,7 +50,7 @@ export default function ExpertAvailability() {
         setSaving(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/expert/availability', {
+            const res = await fetch(getApiUrl('/api/expert/availability'), {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

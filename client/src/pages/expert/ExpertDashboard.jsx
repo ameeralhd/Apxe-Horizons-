@@ -18,6 +18,7 @@ import {
     X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ExpertDashboard() {
     const navigate = useNavigate();
@@ -38,8 +39,8 @@ export default function ExpertDashboard() {
         try {
             const token = localStorage.getItem('token');
             const [statsRes, sessionsRes] = await Promise.all([
-                fetch('/api/expert/stats', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('/api/expert/sessions', { headers: { 'Authorization': `Bearer ${token}` } })
+                fetch(getApiUrl('/api/expert/stats'), { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(getApiUrl('/api/expert/sessions'), { headers: { 'Authorization': `Bearer ${token}` } })
             ]);
 
             if (statsRes.ok && sessionsRes.ok) {

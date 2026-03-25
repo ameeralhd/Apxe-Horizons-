@@ -13,6 +13,7 @@ import {
     ShieldCheck
 } from 'lucide-react';
 import '../../admin-enhanced.css';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function VerificationQueue() {
     const [documents, setDocuments] = useState([]);
@@ -40,7 +41,7 @@ export default function VerificationQueue() {
             if (filterStatus !== 'all') query.append('status', filterStatus);
             if (filterCategory !== 'all') query.append('category', filterCategory);
 
-            const res = await fetch(`/api/admin/documents?${query}`, {
+            const res = await fetch(getApiUrl(`/api/admin/documents?${query}`), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -103,7 +104,7 @@ export default function VerificationQueue() {
                 rejectionReason: reason // Pass specifically for rejection
             };
 
-            await fetch(`/api/admin/documents/${selectedDoc.id}/review`, {
+            await fetch(getApiUrl(`/api/admin/documents/${selectedDoc.id}/review`), {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -148,7 +149,7 @@ export default function VerificationQueue() {
             const token = localStorage.getItem('token');
             // Parallel requests (or implement bulk endpoint in backend for efficiency)
             await Promise.all(selectedIds.map(id =>
-                fetch(`/api/admin/documents/${id}/review`, {
+                fetch(getApiUrl(`/api/admin/documents/${id}/review`), {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,

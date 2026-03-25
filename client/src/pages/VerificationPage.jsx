@@ -8,6 +8,7 @@ import {
     X, Check, ChevronDown, BookOpen
 } from 'lucide-react';
 import ResourceLibrary from '../components/ResourceHub/ResourceLibrary';
+import { getApiUrl } from '../utils/apiConfig';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DOCUMENT CATEGORY DEFINITIONS (used for grouping in the vault)
@@ -91,7 +92,7 @@ export default function VerificationPage() {
             const token = localStorage.getItem('token');
             if (!token) return;
             try {
-                const res = await fetch('/api/documents/path', { headers: { Authorization: `Bearer ${token}` } });
+                const res = await fetch(getApiUrl('/api/documents/path'), { headers: { Authorization: `Bearer ${token}` } });
                 if (res.ok) {
                     const data = await res.json();
                     setSelectedCategory(data.category);
@@ -107,7 +108,7 @@ export default function VerificationPage() {
         const token = localStorage.getItem('token');
         if (!token) return;
         try {
-            await fetch('/api/documents/path', {
+            await fetch(getApiUrl('/api/documents/path'), {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ category, type, country })
@@ -130,7 +131,7 @@ export default function VerificationPage() {
             else query.append('type', selectedType);
             const token = localStorage.getItem('token');
             const headers = token ? { Authorization: `Bearer ${token}` } : {};
-            const res = await fetch(`/api/documents/requirements?${query}`, { headers });
+            const res = await fetch(getApiUrl(`/api/documents/requirements?${query}`), { headers });
             if (!res.ok) throw new Error();
             const data = await res.json();
             setDocuments(Array.isArray(data) ? data : []);
@@ -155,7 +156,7 @@ export default function VerificationPage() {
         formData.append('documentType', documentType);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/documents/analyze', {
+            const res = await fetch(getApiUrl('/api/documents/analyze'), {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
                 body: formData

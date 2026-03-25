@@ -1,5 +1,6 @@
+import { getApiUrl } from '../../utils/apiConfig';
 import { useState, useEffect } from 'react';
-import { 
+import {
     Plus, Search, Edit2, Trash2, ExternalLink, 
     MoreVertical, CheckCircle2, XCircle, Play, 
     ArrowUpDown, Filter, Video, Users, GraduationCap, X
@@ -27,7 +28,7 @@ export default function MediaManager() {
 
     const fetchContent = async () => {
         try {
-            const res = await fetch('/api/dynamic-content', {
+            const res = await fetch(getApiUrl('/api/dynamic-content'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -76,7 +77,7 @@ export default function MediaManager() {
         if (!window.confirm('Are you sure you want to delete this content?')) return;
 
         try {
-            const res = await fetch(`/api/dynamic-content/${id}`, {
+            const res = await fetch(getApiUrl(`/api/dynamic-content/${id}`), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -91,7 +92,7 @@ export default function MediaManager() {
 
     const toggleStatus = async (item) => {
         try {
-            const res = await fetch(`/api/dynamic-content/${item.id}`, {
+            const res = await fetch(getApiUrl(`/api/dynamic-content/${item.id}`), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

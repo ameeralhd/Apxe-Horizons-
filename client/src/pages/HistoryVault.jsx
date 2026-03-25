@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Calendar, User, CreditCard, Download, CheckCircle2, Star, Clock, FileText, ChevronRight } from 'lucide-react';
 import ReviewModal from '../components/ReviewModal';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function HistoryVault() {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function HistoryVault() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`/api/appointments/${payment.appointmentId || payment.id}/receipt`, {
+            const response = await fetch(getApiUrl(`/api/appointments/${payment.appointmentId || payment.id}/receipt`), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -45,7 +46,7 @@ export default function HistoryVault() {
 
     const fetchBookings = () => {
         const token = localStorage.getItem('token');
-        fetch('/api/appointments', {
+        fetch(getApiUrl('/api/appointments'), {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.json())

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { ShieldCheck, CreditCard, CheckCircle, Lock, Calendar, User, FileText } from 'lucide-react';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function PaymentPage() {
     const { id } = useParams();
@@ -14,7 +15,7 @@ export default function PaymentPage() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        fetch(`/api/appointments/${id}`, {
+        fetch(getApiUrl(`/api/appointments/${id}`), {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => {
@@ -39,7 +40,7 @@ export default function PaymentPage() {
 
         // Simulate API call delay
         setTimeout(() => {
-            fetch(`/api/appointments/${id}/pay`, {
+            fetch(getApiUrl(`/api/appointments/${id}/pay`), {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             })

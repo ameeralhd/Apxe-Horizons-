@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Filter, Bookmark } from 'lucide-react';
 import ResourceCard from './ResourceCard';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function ResourceLibrary() {
     const [templates, setTemplates] = useState([]);
@@ -29,7 +30,7 @@ export default function ResourceLibrary() {
                 category: catMap[category],
                 search 
             });
-            const res = await fetch(`/api/templates?${query}`, {
+            const res = await fetch(getApiUrl(`/api/templates?${query}`), {
                 headers: { 'Authorization': token ? `Bearer ${token}` : '' }
             });
             const data = await res.json();
@@ -52,7 +53,7 @@ export default function ResourceLibrary() {
         if (!token) return alert('Please login to favorite templates');
         
         try {
-            const res = await fetch(`/api/templates/${id}/favorite`, {
+            const res = await fetch(getApiUrl(`/api/templates/${id}/favorite`), {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

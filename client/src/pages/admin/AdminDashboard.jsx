@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, FileCheck, Calendar, TrendingUp, DollarSign, ArrowUp, ArrowDown, MessageSquare } from 'lucide-react';
 import '../../admin-enhanced.css';
+import { getApiUrl } from '../../utils/apiConfig';
 
 export default function AdminDashboard() {
     const [analytics, setAnalytics] = useState({
@@ -25,7 +26,7 @@ export default function AdminDashboard() {
         setError(null);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/admin/analytics', {
+            const res = await fetch(getApiUrl('/api/admin/analytics'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 

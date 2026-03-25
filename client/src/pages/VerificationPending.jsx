@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Mail, ArrowLeft, RefreshCw, CheckCircle } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import LandingLayout from '../components/LandingLayout';
+import { getApiUrl } from '../utils/apiConfig';
 
 export default function VerificationPending() {
     const location = useLocation();
@@ -119,7 +120,7 @@ export default function VerificationPending() {
                             onClick={async () => {
                                 if (window.confirm('Developer Mode: Force verify this account?')) {
                                     try {
-                                        const res = await fetch('/api/auth/debug-verify', {
+                                        const res = await fetch(getApiUrl('/api/auth/debug-verify'), {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify({ email })
