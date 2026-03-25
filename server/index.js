@@ -57,7 +57,30 @@ app.use((err, req, res, next) => {
 });
 
 // Sync DB and Start Server
-sequelize.sync().then(() => {
+sequelize.sync().then(async () => {
+    // Ensure Admin User Exists
+    try {
+        const User = require('./models/User');
+        const bcrypt = require('bcryptjs');
+        const adminEmail = 'joinapex@horizons-pex.com';
+        const existingAdmin = await User.findOne({ where: { email: adminEmail } });
+        
+        if (!existingAdmin) {
+            const hashedPassword = await bcrypt.hash('Apex13189956@join', 10);
+            await User.create({
+                name: 'Admin User',
+                email: adminEmail,
+                password: hashedPassword,
+                role: 'admin',
+                isVerified: true,
+                phone: '+0000000000'
+            });
+            console.log('✅ Default admin user seeded successfully.');
+        }
+    } catch (seedErr) {
+        console.error('❌ Error seeding admin user:', seedErr.message);
+    }
+
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
 
