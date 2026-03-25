@@ -142,17 +142,39 @@
 
 @media (max-width: 1024px) {
     .admin-main {
-        margin-left: 0;
+        margin-left: 0 !important;
     }
 
     .admin-sidebar {
-        transform: translateX(-280px);
+        transform: translateX(-100%);
+        width: 280px;
+        box-shadow: none;
     }
 
     .admin-sidebar.open {
         transform: translateX(0);
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .admin-sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 90;
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .admin-menu-toggle {
+        display: flex !important;
     }
 }
+
+.admin-sidebar-overlay {
+    display: none;
+}
+
 
 .admin-topbar {
     background: white;

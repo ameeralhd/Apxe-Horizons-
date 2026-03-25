@@ -29,6 +29,20 @@ export default function AdminLayout() {
         user = { name: 'Admin' };
     }
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 1024) {
+                setSidebarOpen(false);
+            } else {
+                setSidebarOpen(true);
+            }
+        };
+
+        handleResize(); // Initialize on mount
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -98,6 +112,12 @@ export default function AdminLayout() {
                         <span className="interaction-heartbeat" title="Interface Active"></span>
                     </div>
                 </header>
+
+                <div
+                    className="admin-sidebar-overlay mobile-only"
+                    onClick={() => setSidebarOpen(false)}
+                    style={{ visibility: sidebarOpen ? 'visible' : 'hidden', opacity: sidebarOpen ? 1 : 0, transition: 'opacity 0.3s ease' }}
+                ></div>
 
                 {/* Page Content */}
                 <main className="admin-content">

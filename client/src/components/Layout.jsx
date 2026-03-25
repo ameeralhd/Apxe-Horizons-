@@ -15,6 +15,7 @@ export default function Layout({ children }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -55,10 +56,18 @@ export default function Layout({ children }) {
                 left: 0,
                 right: 0,
                 zIndex: 1000,
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0 var(--space-8)'
+                padding: '0 var(--space-4)',
+                justifyContent: 'space-between'
             }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {/* Hamburger for Mobile */}
+                    <button 
+                        className="mobile-only" 
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        style={{ marginRight: 'var(--space-4)', color: '#1E293B' }}
+                    >
+                        <Menu size={24} />
+                    </button>
                 {/* Logo */}
                 <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: 'var(--space-12)' }}>
                     <div style={{
@@ -70,8 +79,8 @@ export default function Layout({ children }) {
                     </div>
                 </Link>
 
-                {/* Nav Links */}
-                <nav style={{ display: 'flex', gap: 'var(--space-8)', alignItems: 'center' }}>
+                {/* Nav Links - Desktop Only */}
+                <nav className="desktop-only" style={{ display: 'flex', gap: 'var(--space-8)', alignItems: 'center' }}>
                     {navLinks.map(link => {
                         const isActive = location.pathname === link.path;
                         return (
@@ -93,7 +102,7 @@ export default function Layout({ children }) {
                     })}
                 </nav>
 
-                <div style={{ width: '1px', height: '24px', background: '#E2E8F0', margin: '0 var(--space-4)' }}></div>
+                <div className="desktop-only" style={{ width: '1px', height: '24px', background: '#E2E8F0', margin: '0 var(--space-4)' }}></div>
 
                 {/* Notifications & Profile */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
@@ -195,16 +204,68 @@ export default function Layout({ children }) {
                         </div>
                     </div>
 
-                    <style>{`
-                        .profile-dropdown-container:hover .dropdown-menu {
-                            display: block !important;
-                            animation: slideUp 0.2s ease-out;
-                        }
-                        @keyframes slideUp {
-                            from { opacity: 0; transform: translateY(10px); }
-                            to { opacity: 1; transform: translateY(0); }
-                        }
-                    `}</style>
+                </div>
+
+                {/* Mobile Menu Drawer */}
+                <div style={{
+                    position: 'fixed',
+                    top: '80px',
+                    left: 0,
+                    right: 0,
+                    background: 'white',
+                    borderBottom: '1px solid #E2E8F0',
+                    padding: 'var(--space-4)',
+                    display: mobileMenuOpen ? 'flex' : 'none',
+                    flexDirection: 'column',
+                    gap: 'var(--space-4)',
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                    zIndex: 999,
+                    animation: 'slideDown 0.3s ease-out'
+                }}>
+                    {navLinks.map(link => (
+                        <Link
+                            key={link.path}
+                            to={link.path}
+                            onClick={() => setMobileMenuOpen(false)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                padding: '12px',
+                                borderRadius: '12px',
+                                background: location.pathname === link.path ? '#F0FDFA' : 'transparent',
+                                color: location.pathname === link.path ? '#2DD4BF' : '#1E293B',
+                                fontWeight: 700,
+                                textDecoration: 'none'
+                            }}
+                        >
+                            {link.icon}
+                            {link.name}
+                        </Link>
+                    ))}
+                    <div style={{ height: '1px', background: '#F1F5F9', margin: '8px 0' }}></div>
+                    <Link to="/settings" onClick={() => setMobileMenuOpen(false)} style={{ ...dropdownItemStyle, padding: '12px' }}>
+                        <Settings size={18} /> Settings
+                    </Link>
+                    <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} style={{ ...dropdownItemStyle, color: '#F43F5E', width: '100%', border: 'none', background: 'none', cursor: 'pointer', padding: '12px' }}>
+                        <LogOut size={18} /> Sign Out
+                    </button>
+                </div>
+
+                <style>{`
+                    .profile-dropdown-container:hover .dropdown-menu {
+                        display: block !important;
+                        animation: slideUp 0.2s ease-out;
+                    }
+                    @keyframes slideUp {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes slideDown {
+                        from { opacity: 0; transform: translateY(-20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                `}</style>
                 </div>
             </header>
 
@@ -214,8 +275,8 @@ export default function Layout({ children }) {
                 paddingBottom: 'var(--space-16)',
                 maxWidth: '1400px',
                 margin: '0 auto',
-                paddingLeft: 'var(--space-8)',
-                paddingRight: 'var(--space-8)'
+                paddingLeft: 'var(--space-4)',
+                paddingRight: 'var(--space-4)'
             }}>
                 {children}
             </main>

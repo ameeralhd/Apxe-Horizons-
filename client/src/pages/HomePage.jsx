@@ -205,6 +205,7 @@ export default function HomePage() {
                         backgroundImage: 'url("/images/hero_concept.jpg")',
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
                         opacity: 0.5,
                         zIndex: 1
                     }}></div>
@@ -231,16 +232,25 @@ export default function HomePage() {
                             }}>
                                 Navigate international educational opportunities with trust, clarity, and expert support at every step.
                             </p>
-                            <div className="hero-buttons-container" style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-6)', marginBottom: 'var(--space-16)' }}>
+                            <div className="hero-buttons-container" style={{ 
+                                display: 'flex', 
+                                justifyContent: 'center', 
+                                gap: 'var(--space-4)', 
+                                marginBottom: 'var(--space-16)',
+                                flexWrap: 'wrap' 
+                            }}>
                                 <Link to="/register" className="btn" style={{
                                     background: '#2DD4BF',
                                     color: '#1E293B',
-                                    padding: '18px 48px',
+                                    padding: '16px 32px',
                                     borderRadius: 'var(--radius-md)',
                                     fontWeight: 800,
                                     fontSize: 'var(--text-md)',
                                     boxShadow: '0 8px 30px rgba(45, 212, 191, 0.4)',
-                                    transition: 'transform 0.2s'
+                                    transition: 'transform 0.2s',
+                                    flex: '1',
+                                    minWidth: '200px',
+                                    maxWidth: '300px'
                                 }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
                                     Create Account
                                 </Link>
@@ -248,30 +258,33 @@ export default function HomePage() {
                                     background: 'rgba(255,255,255,0.1)',
                                     backdropFilter: 'blur(10px)',
                                     color: 'white',
-                                    padding: '18px 48px',
+                                    padding: '16px 32px',
                                     borderRadius: 'var(--radius-md)',
                                     fontWeight: 800,
                                     fontSize: 'var(--text-md)',
                                     border: '1px solid rgba(255,255,255,0.2)',
                                     boxShadow: '0 8px 30px rgba(0, 0, 0, 0.2)',
-                                    transition: 'transform 0.2s'
+                                    transition: 'transform 0.2s',
+                                    flex: '1',
+                                    minWidth: '200px',
+                                    maxWidth: '300px'
                                 }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
                                     Login
                                 </Link>
                             </div>
 
                             {/* Trust Bar */}
-                            <div className="animate-fade-in-delayed" style={{ marginTop: 'var(--space-12)' }}>
+                            <div className="animate-fade-in-delayed deskstop-only" style={{ marginTop: 'var(--space-12)' }}>
                                 <p style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.6, marginBottom: 'var(--space-6)' }}>
                                     Empowering students to reach top institutions
                                 </p>
-                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 'var(--space-12)', filter: 'grayscale(100%) brightness(200%)', opacity: 0.4 }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 'var(--space-12)', filter: 'grayscale(100%) brightness(200%)', opacity: 0.4, flexWrap: 'wrap' }}>
                                     {/* Mock Logos */}
-                                    <div style={{ fontWeight: 900, fontSize: '20px' }}>OXFORD</div>
-                                    <div style={{ fontWeight: 900, fontSize: '20px' }}>HARVARD</div>
-                                    <div style={{ fontWeight: 900, fontSize: '20px' }}>TSINGHUA</div>
-                                    <div style={{ fontWeight: 900, fontSize: '20px' }}>NUS</div>
-                                    <div style={{ fontWeight: 900, fontSize: '20px' }}>MIT</div>
+                                    <div style={{ fontWeight: 900, fontSize: '16px' }}>OXFORD</div>
+                                    <div style={{ fontWeight: 900, fontSize: '16px' }}>HARVARD</div>
+                                    <div style={{ fontWeight: 900, fontSize: '16px' }}>TSINGHUA</div>
+                                    <div style={{ fontWeight: 900, fontSize: '16px' }}>NUS</div>
+                                    <div style={{ fontWeight: 900, fontSize: '16px' }}>MIT</div>
                                 </div>
                             </div>
                         </div>
@@ -369,7 +382,11 @@ export default function HomePage() {
                         <div style={{ textAlign: 'center', marginBottom: 'var(--space-16)' }}>
                             <h2 style={{ fontSize: 'var(--text-3xl)', fontWeight: 900, color: '#1E293B' }}>Core Services</h2>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-10)' }}>
+                        <div className="services-grid" style={{ 
+                            display: 'grid', 
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+                            gap: 'var(--space-10)' 
+                        }}>
                             <ServiceCardDetailed
                                 icon={<Calendar size={32} />}
                                 title="Consultation Support"
@@ -510,7 +527,7 @@ export default function HomePage() {
                         </div>
                         <div style={{
                             display: 'grid',
-                            gridTemplateColumns: 'fixed(repeat(auto-fit, minmax(400px, 1fr)))',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                             gap: 'var(--space-6)',
                             maxWidth: '1200px',
                             margin: '0 auto'
@@ -741,7 +758,12 @@ export default function HomePage() {
                     <AdmissionsGuideCTA isLoggedIn={true} />
 
                     {/* Stats Cards Row */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-6)', marginBottom: 'var(--space-12)' }}>
+                    <div className="stats-grid-responsive" style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', 
+                        gap: 'var(--space-6)', 
+                        marginBottom: 'var(--space-12)' 
+                    }}>
                         <div className="card" style={{ padding: '24px', background: 'white', border: '1px solid #F1F5F9', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '20px' }}>
                             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#F0FDFA', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2DD4BF' }}>
                                 <BookOpen size={24} />
@@ -797,7 +819,12 @@ export default function HomePage() {
                     </div>
 
                     {/* Academic Control Panel & Recent Updates */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-10)', marginBottom: 'var(--space-12)' }}>
+                    <div className="academic-panel-responsive" style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
+                        gap: 'var(--space-10)', 
+                        marginBottom: 'var(--space-12)' 
+                    }}>
                         <div>
                             <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 900, color: '#1E293B', marginBottom: '4px' }}>Your Academic Control Panel</h2>
                             <p style={{ color: '#64748B', fontSize: 'var(--text-sm)', marginBottom: 'var(--space-8)' }}>Access core services and personalized guidance.</p>
@@ -1172,7 +1199,7 @@ function ElitePartnersSlider() {
                         onMouseEnter={() => setPaused(true)}
                         onMouseLeave={() => setPaused(false)}
                         style={{
-                            width: '300px',
+                            width: window.innerWidth < 768 ? '240px' : '300px',
                             borderRadius: '16px',
                             overflow: 'hidden',
                             position: 'relative',
@@ -1535,18 +1562,24 @@ function TestimonialCarouselAdvanced() {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
+    const isMobile = window.innerWidth < 768;
+    const visibleItems = isMobile ? [testimonials[activeIndex]] : [testimonials[activeIndex], testimonials[(activeIndex + 1) % testimonials.length]];
+
     useEffect(() => {
         const interval = setInterval(() => {
-            setActiveIndex(prev => (prev + 2) % testimonials.length);
+            setActiveIndex(prev => (prev + (isMobile ? 1 : 2)) % testimonials.length);
         }, 5000);
         return () => clearInterval(interval);
-    }, []);
-
-    const visibleItems = [testimonials[activeIndex], testimonials[(activeIndex + 1) % testimonials.length]];
+    }, [isMobile]);
 
     return (
         <div style={{ position: 'relative' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-8)', transition: 'all 0.5s ease-in-out' }}>
+            <div className="testimonials-grid" style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+                gap: 'var(--space-8)', 
+                transition: 'all 0.5s ease-in-out' 
+            }}>
                 {visibleItems.map((t, i) => (
                     <div key={i} className="card" style={{
                         padding: '40px',
@@ -2192,12 +2225,12 @@ function WeeklySpotlight({ uni, onWatchVideo }) {
     if (!uni) return null;
 
     return (
-        <div style={{
+        <div className="weekly-spotlight-responsive" style={{
             background: 'linear-gradient(135deg, #1E293B 0%, #334155 100%)',
             borderRadius: '24px',
             overflow: 'hidden',
             display: 'grid',
-            gridTemplateColumns: '0.8fr 1.2fr',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             minHeight: '240px',
             maxWidth: '960px',
             margin: '0 auto var(--space-16)',

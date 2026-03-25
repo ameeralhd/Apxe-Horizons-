@@ -177,7 +177,7 @@ export default function Login() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                padding: 'var(--space-8)',
+                padding: 'var(--space-6)',
                 background: 'white'
             }}>
                 <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
