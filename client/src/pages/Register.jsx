@@ -71,7 +71,13 @@ export default function Register() {
                     password: formData.password
                 })
             });
-            const data = await res.json();
+            let data;
+            try {
+                data = await res.json();
+            } catch (jsonErr) {
+                console.error("JSON parse error on register:", jsonErr);
+                throw new Error("Server returned an invalid response. Please check your connection or contact support.");
+            }
             if (!res.ok) throw new Error(data.message);
 
             setIsSuccess(true);

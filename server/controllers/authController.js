@@ -48,7 +48,7 @@ exports.register = async (req, res) => {
         });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
 
@@ -77,7 +77,7 @@ exports.verifyEmail = async (req, res) => {
         res.json({ message: 'Email verified successfully! You can now log in.' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
 

@@ -70,6 +70,8 @@ body {
   background-color: var(--color-bg-base);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 h1,
@@ -388,4 +390,75 @@ button {
 .pulse-mint {
   animation: pulse-mint 2s infinite !important;
   z-index: 10;
+}
+
+/* --- Mobile Responsiveness Overrides --- */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-section {
+    min-height: 60vh !important;
+    padding: 60px 0 !important;
+  }
+
+  .hero-buttons-container {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .hero-buttons-container .btn {
+    width: 100% !important;
+    padding: 16px !important;
+  }
+
+  .admissions-guide-card {
+    flex-direction: column !important;
+    width: 90% !important;
+    margin: 0 auto !important;
+    padding: 32px 20px !important;
+    text-align: center !important;
+  }
+
+  .admissions-guide-card div {
+      flex-direction: column !important;
+  }
+
+  .admissions-guide-card .book-icon {
+    margin: 0 auto 16px !important;
+  }
+
+  .hero-text-container {
+      padding: 0 20px !important;
+  }
+  
+  h1 {
+      font-size: 2.2rem !important;
+  }
+
+  .uni-grid {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+  }
+
+  .layout header {
+      padding: 0 16px !important;
+      justify-content: space-between !important;
+  }
+
+  .layout nav {
+      display: none !important;
+  }
+
+  header .container {
+      gap: 10px !important;
+  }
+
+  footer .container {
+      padding: 0 20px !important;
+  }
 }

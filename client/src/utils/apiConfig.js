@@ -7,8 +7,14 @@ export const getApiUrl = (path) => {
     // Ensure path starts with /
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
     
+    // If API_BASE_URL is set but lacks protocol, prepend https://
+    let baseUrl = API_BASE_URL;
+    if (baseUrl && !baseUrl.startsWith('http')) {
+        baseUrl = `https://${baseUrl}`;
+    }
+    
     // Combine base URL and path
-    return `${API_BASE_URL}${normalizedPath}`;
+    return `${baseUrl}${normalizedPath}`;
 };
 
 export default API_BASE_URL;

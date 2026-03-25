@@ -29,10 +29,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: apex-horizons-api
-          property: host
+        value: https://apex-horizons-api.onrender.com
     routes:
       - type: rewrite
         source: /*

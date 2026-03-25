@@ -186,7 +186,7 @@ export default function HomePage() {
         return (
             <LandingLayout>
                 {/* Hero Section */}
-                <section style={{
+                <section className="hero-section" style={{
                     position: 'relative',
                     minHeight: '85vh',
                     display: 'flex',
@@ -196,7 +196,7 @@ export default function HomePage() {
                     background: '#0F172A'
                 }}>
                     {/* Background Overlay */}
-                    <div style={{
+                    <div className="hero-bg-overlay" style={{
                         position: 'absolute',
                         top: 0,
                         left: 0,
@@ -211,7 +211,7 @@ export default function HomePage() {
 
                     <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center', color: 'white' }}>
                         <div className="animate-fade-in" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-                            <h1 style={{
+                            <h1 className="hero-title" style={{
                                 fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                                 fontWeight: 900,
                                 lineHeight: 1.1,
@@ -222,7 +222,7 @@ export default function HomePage() {
                                 Unlock Your Global Future:<br />
                                 Expert Guidance for Scholarships & Careers
                             </h1>
-                            <p style={{
+                            <p className="hero-subtitle" style={{
                                 fontSize: 'var(--text-xl)',
                                 opacity: 0.9,
                                 marginBottom: 'var(--space-10)',
@@ -231,7 +231,7 @@ export default function HomePage() {
                             }}>
                                 Navigate international educational opportunities with trust, clarity, and expert support at every step.
                             </p>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-6)', marginBottom: 'var(--space-16)' }}>
+                            <div className="hero-buttons-container" style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-6)', marginBottom: 'var(--space-16)' }}>
                                 <Link to="/register" className="btn" style={{
                                     background: '#2DD4BF',
                                     color: '#1E293B',
@@ -2309,7 +2309,7 @@ function AdmissionsGuideCTA({ isLoggedIn }) {
     };
 
     return (
-        <div style={{
+        <div className="admissions-guide-card" style={{
             background: 'linear-gradient(135deg, #F0FDFA 0%, #E2E8F0 100%)',
             borderRadius: '24px',
             padding: '40px',
@@ -2322,7 +2322,7 @@ function AdmissionsGuideCTA({ isLoggedIn }) {
             boxShadow: '0 4px 20px rgba(45, 212, 191, 0.08)'
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flex: 1 }}>
-                <div style={{
+                <div className="book-icon" style={{
                     width: '80px',
                     height: '80px',
                     borderRadius: '20px',
