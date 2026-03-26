@@ -10,6 +10,15 @@ export default function ConsultantManagement() {
     const [activeTab, setActiveTab] = useState('profile'); // profile | schedule
     const [availability, setAvailability] = useState({});
     const [notification, setNotification] = useState(null);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [newConsultant, setNewConsultant] = useState({
+        name: '',
+        email: '',
+        password: '',
+        title: '',
+        hourly_rate: 50,
+        bio: ''
+    });
 
     // Fetch Consultants
     useEffect(() => {
@@ -114,6 +123,38 @@ export default function ConsultantManagement() {
         }
     };
 
+    const handleAddConsultant = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(getApiUrl('/api/admin/consultants'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(newConsultant)
+            });
+
+            if (res.ok) {
+                const created = await res.json();
+                setConsultants(prev => [created, ...prev]);
+                setShowAddModal(false);
+                setNewConsultant({ name: '', email: '', password: '', title: '', hourly_rate: 50, bio: '' });
+                showNotification('Consultant added successfully');
+            } else {
+                const data = await res.json();
+                showNotification(data.message || 'Failed to add consultant', 'error');
+            }
+        } catch (error) {
+            console.error('Error adding consultant:', error);
+            showNotification('Network error', 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const showNotification = (msg, type = 'success') => {
         setNotification({ message: msg, type });
         setTimeout(() => setNotification(null), 3000);
@@ -156,7 +197,11 @@ export default function ConsultantManagement() {
                         <h2>Consultant Management</h2>
                         <p>Manage profiles, availability, and active status.</p>
                     </div>
-                    <button className="btn btn-primary" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button 
+                        onClick={() => setShowAddModal(true)}
+                        className="btn btn-primary" 
+                        style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
+                    >
                         <Plus size={18} /> Add New
                     </button>
                 </div>
@@ -442,6 +487,82 @@ export default function ConsultantManagement() {
                     )}
                 </div>
             </div>
+
+            {/* Add Consultant Modal */}
+            {showAddModal && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100, padding: '20px'
+                }}>
+                    <div className="admin-card animate-scale-up" style={{ width: '100%', maxWidth: '500px', padding: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            <h3 style={{ margin: 0 }}>Add New Consultant</h3>
+                            <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleAddConsultant} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Full Name</label>
+                                <input 
+                                    type="text" required
+                                    value={newConsultant.name}
+                                    onChange={(e) => setNewConsultant({...newConsultant, name: e.target.value})}
+                                    style={{ width: '100%', padding: '10px', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                    placeholder="e.g. Dr. Sarah Jenkins"
+                                />
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Email Address</label>
+                                    <input 
+                                        type="email" required
+                                        value={newConsultant.email}
+                                        onChange={(e) => setNewConsultant({...newConsultant, email: e.target.value})}
+                                        style={{ width: '100%', padding: '10px', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                        placeholder="sarah@example.com"
+                                    />
+                                </div>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Password</label>
+                                    <input 
+                                        type="password" required
+                                        value={newConsultant.password}
+                                        onChange={(e) => setNewConsultant({...newConsultant, password: e.target.value})}
+                                        style={{ width: '100%', padding: '10px', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Professional Title</label>
+                                <input 
+                                    type="text" required
+                                    value={newConsultant.title}
+                                    onChange={(e) => setNewConsultant({...newConsultant, title: e.target.value})}
+                                    style={{ width: '100%', padding: '10px', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                    placeholder="e.g. Scholarship Advisor"
+                                />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Hourly Rate ($)</label>
+                                <input 
+                                    type="number" required
+                                    value={newConsultant.hourly_rate}
+                                    onChange={(e) => setNewConsultant({...newConsultant, hourly_rate: e.target.value})}
+                                    style={{ width: '100%', padding: '10px', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                                />
+                            </div>
+
+                            <button type="submit" className="btn-primary" style={{ marginTop: '12px', padding: '12px', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                {loading ? 'Creating...' : 'Create Consultant Profile'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

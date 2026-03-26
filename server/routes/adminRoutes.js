@@ -337,15 +337,6 @@ router.put('/consultants/:id', consultantController.adminUpdateConsultant);
 router.put('/consultants/:id/status', consultantController.adminToggleStatus);
 
 // Create new consultant (Create User + Profile)
-router.post('/consultants', async (req, res) => {
-    // This is a complex flow: Create User -> Create Profile. 
-    // For simplicity, we can reuse authController.register logic but set role='consultant'
-    // Or implement a specific adminCreateConsultant in controller. 
-    // Let's assume the frontend will call /api/auth/register with role='consultant' for now, 
-    // OR we implement a composite handler here if needed. 
-    // For this iteration, let's stick to updating existing ones first as per prompt focus on "Management".
-    // Check if we need a dedicated create route.
-    res.status(501).json({ message: 'Not implemented yet. Use /api/auth/register' });
-});
+router.post('/consultants', consultantController.adminCreateConsultant);
 
 module.exports = router;

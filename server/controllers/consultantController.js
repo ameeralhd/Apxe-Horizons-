@@ -1,5 +1,6 @@
 const { ConsultantProfile, User, Availability } = require('../models');
 const { Op } = require('sequelize');
+const bcrypt = require('bcryptjs');
 
 // Public: Get all active consultants
 exports.getAllConsultants = async (req, res) => {
@@ -210,6 +211,55 @@ exports.adminToggleStatus = async (req, res) => {
         res.json({ message: `Consultant ${isActive ? 'activated' : 'deactivated'}`, consultant });
     } catch (err) {
         console.error('API Error (adminToggleStatus):', err);
+        res.status(500).json({ message: 'Server Error', error: err.message });
+    }
+};
+// Admin: Create new consultant (User + Profile)
+exports.adminCreateConsultant = async (req, res) => {
+    try {
+        const { name, email, password, phone, title, bio, hourly_rate, profileImage } = req.body;
+
+        // 1. Check if user already exists
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User with this email already exists' });
+        }
+
+        // 2. Create User
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            phone: phone || '+0000000000',
+            role: 'consultant',
+            isVerified: true
+        });
+
+        // 3. Create Consultant Profile
+        const newProfile = await ConsultantProfile.create({
+            userId: newUser.id,
+            bio: bio || 'Professional consultant at Apex Horizons.',
+            title: title || 'Consultant',
+            hourly_rate: hourly_rate || 50.0,
+            profileImage,
+            isActive: true,
+            isOnline: true
+        });
+
+        // 4. Return combined data
+        const fullProfile = await ConsultantProfile.findByPk(newProfile.id, {
+            include: [
+                { model: User, attributes: ['id', 'name', 'email', 'role'] },
+                { model: Availability }
+            ]
+        });
+
+        res.status(201).json(fullProfile);
+    } catch (err) {
+        console.error('API Error (adminCreateConsultant):', err);
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
