@@ -11,7 +11,7 @@ import {
     FolderTree,
     Video
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../admin-enhanced.css';
 
 export default function AdminLayout() {
