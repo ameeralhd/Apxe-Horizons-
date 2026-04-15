@@ -283,12 +283,13 @@ export default function ConsultationPage() {
                 },
                 body: JSON.stringify({
                     consultantId: selectedConsultant.id,
-                    serviceId: selectedCategory?.id, // Assuming selectedCategory.id is the serviceId
+                    serviceId: null, // Categories are not linked to DB Service rows
+                    serviceType: selectedCategory?.title || 'General Consultation',
                     date: bookingData.date,
                     time: bookingData.time,
                     topic: bookingData.topic,
-                    notes: bookingData.message, // Using notes for message
-                    documentPath: bookingData.documentPath || null // Using documentPath from bookingData
+                    notes: bookingData.message,
+                    documentPath: bookingData.documentPath || null
                 })
             });
 

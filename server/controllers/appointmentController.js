@@ -11,7 +11,7 @@ const { generateReceipt } = require('../services/receiptService');
 
 exports.createAppointment = async (req, res) => {
     try {
-        const { serviceId, consultantId, date, time, topic, documentPath } = req.body;
+        const { serviceId, serviceType, consultantId, date, time, topic, documentPath } = req.body;
         const userId = req.user.id;
 
         // 1. Double-Booking Prevention & Availability Logic
@@ -94,6 +94,7 @@ exports.createAppointment = async (req, res) => {
         const appointment = await Appointment.create({
             userId,
             serviceId: validatedServiceId,
+            serviceType: serviceType || 'General Consultation',
             consultantId,
             slotId: timeSlot.id,
             date,

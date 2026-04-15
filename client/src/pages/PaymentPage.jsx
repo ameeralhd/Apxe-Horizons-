@@ -66,7 +66,7 @@ export default function PaymentPage() {
                             <ShieldCheck size={14} /> Secure Payment Gateway
                         </div>
                         <h1 style={{ fontSize: '36px', fontWeight: 900, color: '#1E293B', margin: 0 }}>Complete Your Booking</h1>
-                        <p style={{ color: '#64748B', fontWeight: 500 }}>Securely finalize your consultation with {appointment.ConsultantProfile.User.name}.</p>
+                        <p style={{ color: '#64748B', fontWeight: 500 }}>Securely finalize your consultation with {appointment?.ConsultantProfile?.User?.name}.</p>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 'var(--space-8)' }}>
@@ -167,7 +167,7 @@ export default function PaymentPage() {
                                 onClick={handlePayment}
                                 disabled={processing}
                             >
-                                {processing ? 'Verifying Transaction...' : `Pay Total: $${appointment.Service.price}`}
+                                {processing ? 'Verifying Transaction...' : `Pay Total: $${appointment?.Service?.price ?? appointment?.amount ?? '199.99'}`}
                             </button>
                         </div>
 
@@ -178,13 +178,13 @@ export default function PaymentPage() {
                             <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between' }}>
                                 <div>
                                     <p style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Expert Consultant</p>
-                                    <p style={{ fontWeight: 800, fontSize: '16px', color: '#2DD4BF' }}>{appointment.ConsultantProfile.User.name}</p>
+                                    <p style={{ fontWeight: 800, fontSize: '16px', color: '#2DD4BF' }}>{appointment?.ConsultantProfile?.User?.name}</p>
                                 </div>
                             </div>
 
                             <div style={{ marginBottom: '1.5rem' }}>
                                 <p style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Service Selection</p>
-                                <p style={{ fontWeight: 700, fontSize: '15px' }}>{appointment.Service.title}</p>
+                                <p style={{ fontWeight: 700, fontSize: '15px' }}>{appointment?.Service?.title ?? appointment?.serviceType ?? 'Consultation Session'}</p>
                             </div>
 
                             <div style={{ marginBottom: '1.5rem', background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -206,7 +206,7 @@ export default function PaymentPage() {
                             <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem', marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                                 <div>
                                     <span style={{ fontSize: '14px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>Final Amount</span>
-                                    <div style={{ fontSize: '36px', fontWeight: 900, color: 'white' }}>${appointment.Service.price}</div>
+                                    <div style={{ fontSize: '36px', fontWeight: 900, color: 'white' }}>${appointment?.Service?.price ?? appointment?.amount ?? '199.99'}</div>
                                 </div>
                                 <div style={{ padding: '6px 14px', borderRadius: '6px', background: 'rgba(45, 212, 191, 0.1)', color: '#2DD4BF', fontSize: '11px', fontWeight: 900 }}>VIP QUEUE</div>
                             </div>
