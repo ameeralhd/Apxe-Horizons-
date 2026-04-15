@@ -1025,124 +1025,227 @@ export default function ConsultationPage() {
 
                                 {/* Success State */}
                                 {step === 6 && (
-                                    <div className="animate-fade-in">
-                                        {/* Success Hero */}
-                                        <div className="success-hero">
-                                            <div className="checkmark-circle">
-                                                <CheckCircle size={56} strokeWidth={2.5} />
+                                    <div className="animate-fade-in" style={{ padding: '20px 0' }}>
+                                        {/* Success Header Area */}
+                                        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+                                            <div style={{
+                                                width: '80px',
+                                                height: '80px',
+                                                borderRadius: '50%',
+                                                background: '#F0FDFA',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                margin: '0 auto 24px',
+                                                color: '#0D9488',
+                                                boxShadow: '0 0 0 8px #F0FDFA'
+                                            }}>
+                                                <CheckCircle size={48} strokeWidth={2.5} />
                                             </div>
-                                            <h1 style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--space-2)', color: 'var(--color-secondary)' }}>
-                                                Your Journey to {selectedCategory?.title.includes('Scholarship') ? 'Global Education' : selectedCategory?.title.includes('Visa') ? 'Your Dream Country' : 'Career Success'} Starts Now!
+                                            <h1 style={{
+                                                fontSize: 'clamp(24px, 5vw, 40px)',
+                                                fontWeight: 900,
+                                                color: '#1E293B',
+                                                marginBottom: '16px',
+                                                lineHeight: 1.1,
+                                                maxWidth: '800px',
+                                                margin: '0 auto 16px'
+                                            }}>
+                                                Booking Successfully Confirmed!
                                             </h1>
-                                            <p style={{ fontSize: 'var(--text-lg)', color: 'var(--color-text-muted)' }}>
-                                                We've sent a confirmation and meeting link to your email.
+                                            <p style={{
+                                                fontSize: '18px',
+                                                color: '#64748B',
+                                                maxWidth: '600px',
+                                                margin: '0 auto'
+                                            }}>
+                                                We've sent a confirmation and meeting link to your email. Your journey starts here.
                                             </p>
                                         </div>
 
-                                        {/* Appointment Summary Card */}
-                                        <div className="appointment-card">
-                                            <div className="appointment-header">
-                                                <div className="headshot-container" style={{ width: '60px', height: '60px' }}>
-                                                    <img src={`https://i.pravatar.cc/150?u=${selectedConsultant?.User.name}`} alt="" />
+                                        {/* Main Proportional Grid */}
+                                        <div style={{
+                                            display: 'grid',
+                                            gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+                                            gap: '32px',
+                                            alignItems: 'start'
+                                        }}>
+
+                                            {/* Column 1: Appointment Summary */}
+                                            <div style={{
+                                                background: 'white',
+                                                borderRadius: '24px',
+                                                border: '1px solid #E2E8F0',
+                                                boxShadow: '0 10px 30px rgba(0,0,0,0.04)',
+                                                overflow: 'hidden'
+                                            }}>
+                                                <div style={{
+                                                    padding: '24px',
+                                                    borderBottom: '1px solid #F1F5F9',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '16px'
+                                                }}>
+                                                    <div style={{
+                                                        width: '56px',
+                                                        height: '56px',
+                                                        borderRadius: '16px',
+                                                        overflow: 'hidden',
+                                                        background: '#F8FAFC'
+                                                    }}>
+                                                        <img
+                                                            src={`https://i.pravatar.cc/150?u=${selectedConsultant?.User.name}`}
+                                                            alt=""
+                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#1E293B' }}>{selectedConsultant?.User.name}</h3>
+                                                        <p style={{ margin: 0, color: '#0D9488', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                                            {selectedCategory?.title} Specialist
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div style={{ flex: 1 }}>
-                                                    <h3 style={{ margin: 0, fontSize: 'var(--text-xl)' }}>{selectedConsultant?.User.name}</h3>
-                                                    <p style={{ margin: 0, color: 'var(--color-primary)', fontWeight: 600, fontSize: 'var(--text-sm)' }}>
-                                                        {selectedCategory?.title} Specialist
-                                                    </p>
+
+                                                <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569' }}>
+                                                        <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B' }}>
+                                                            <Calendar size={18} />
+                                                        </div>
+                                                        <div style={{ flex: 1 }}>
+                                                            <p style={{ margin: 0, fontSize: '11px', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>Date</p>
+                                                            <p style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#1E293B' }}>
+                                                                {new Date(bookingData.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569' }}>
+                                                        <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B' }}>
+                                                            <Clock size={18} />
+                                                        </div>
+                                                        <div style={{ flex: 1 }}>
+                                                            <p style={{ margin: 0, fontSize: '11px', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>Time</p>
+                                                            <p style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#1E293B' }}>{bookingData.time} (GMT+7)</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#475569' }}>
+                                                        <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B' }}>
+                                                            <Globe size={18} />
+                                                        </div>
+                                                        <div style={{ flex: 1 }}>
+                                                            <p style={{ margin: 0, fontSize: '11px', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>Platform</p>
+                                                            <p style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#1E293B' }}>Zoom Video Conference</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div style={{ padding: '0 24px 24px' }}>
+                                                    <CalendarDropdown
+                                                        consultant={selectedConsultant}
+                                                        date={bookingData.date}
+                                                        time={bookingData.time}
+                                                        category={selectedCategory}
+                                                    />
                                                 </div>
                                             </div>
 
-                                            <div className="appointment-details">
-                                                <div className="detail-row">
-                                                    <Calendar size={18} />
-                                                    <span>Date</span>
-                                                    <strong>{new Date(bookingData.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</strong>
-                                                </div>
-                                                <div className="detail-row">
-                                                    <Clock size={18} />
-                                                    <span>Time</span>
-                                                    <strong>{bookingData.time} (GMT+7)</strong>
-                                                </div>
-                                                <div className="detail-row">
-                                                    <Globe size={18} />
-                                                    <span>Platform</span>
-                                                    <strong>Zoom Meeting</strong>
-                                                </div>
-                                            </div>
+                                            {/* Column 2: Next Steps & Vault */}
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                                                {/* Prep Checklist */}
+                                                <div style={{
+                                                    background: '#F8FAFC',
+                                                    borderRadius: '24px',
+                                                    padding: '24px',
+                                                    border: '1px solid #E2E8F0'
+                                                }}>
+                                                    <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '20px', color: '#1E293B', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                        <Star size={20} color="#0D9488" fill="#0D9488" /> Prepare for Success
+                                                    </h3>
 
-                                            <div style={{ marginTop: 'var(--space-6)' }}>
-                                                <CalendarDropdown
-                                                    consultant={selectedConsultant}
-                                                    date={bookingData.date}
-                                                    time={bookingData.time}
-                                                    category={selectedCategory}
-                                                />
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                                        {[
+                                                            { title: 'Check Your Email', desc: 'We sent a questionnaire to help your expert prepare.', num: 1 },
+                                                            { title: 'Review Documentation', desc: 'Ensure you have all necessary academic records ready.', num: 2 },
+                                                            { title: 'Note Your Questions', desc: 'Draft your top concerns to maximize your time.', num: 3 }
+                                                        ].map(item => (
+                                                            <div key={item.num} style={{ display: 'flex', gap: '16px' }}>
+                                                                <div style={{
+                                                                    width: '24px',
+                                                                    height: '24px',
+                                                                    borderRadius: '50%',
+                                                                    background: '#0D9488',
+                                                                    color: 'white',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 900,
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    flexShrink: 0,
+                                                                    marginTop: '2px'
+                                                                }}>
+                                                                    {item.num}
+                                                                </div>
+                                                                <div>
+                                                                    <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#1E293B' }}>{item.title}</h4>
+                                                                    <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#64748B', lineHeight: 1.4 }}>{item.desc}</p>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Vault Prompt */}
+                                                <div
+                                                    onClick={() => window.location.href = '/verification'}
+                                                    style={{
+                                                        background: 'linear-gradient(135deg, #0D9488, #2DD4BF)',
+                                                        borderRadius: '24px',
+                                                        padding: '24px',
+                                                        color: 'white',
+                                                        cursor: 'pointer',
+                                                        position: 'relative',
+                                                        overflow: 'hidden',
+                                                        boxShadow: '0 10px 20px rgba(13, 148, 136, 0.15)'
+                                                    }}
+                                                >
+                                                    <div style={{ position: 'relative', zIndex: 2 }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                                                            <div style={{ background: 'rgba(255,255,255,0.2)', padding: '8px', borderRadius: '10px' }}>
+                                                                <FileText size={20} />
+                                                            </div>
+                                                            <h4 style={{ margin: 0, fontWeight: 800, fontSize: '16px', color: 'white' }}>Speed Up Your Service</h4>
+                                                        </div>
+                                                        <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.9)', lineHeight: 1.5, marginBottom: '16px' }}>
+                                                            Upload documents to your Vault now so your expert can review them before the meeting starts.
+                                                        </p>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 800, fontSize: '13px' }}>
+                                                            Open Document Vault <ChevronRight size={16} />
+                                                        </div>
+                                                    </div>
+                                                    <FileText size={80} style={{ position: 'absolute', right: '-10px', bottom: '-10px', opacity: 0.1, transform: 'rotate(-20deg)' }} />
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Preparation Checklist */}
-                                        <div className="prep-checklist">
-                                            <h3 style={{ margin: '0 0 var(--space-6)', fontSize: 'var(--text-xl)', color: 'var(--color-secondary)' }}>
-                                                Prepare for Success
-                                            </h3>
-
-                                            <div className="checklist-item">
-                                                <div className="checklist-number">1</div>
-                                                <div className="checklist-content">
-                                                    <h4>Check Your Email</h4>
-                                                    <p>We've sent you a pre-session questionnaire to help your consultant prepare. Please complete it before your meeting.</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="checklist-item">
-                                                <div className="checklist-number">2</div>
-                                                <div className="checklist-content">
-                                                    <h4>Upload Documents to Your Vault</h4>
-                                                    <p>Add any missing transcripts, certificates, or supporting documents so your expert can review them beforehand.</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="checklist-item">
-                                                <div className="checklist-number">3</div>
-                                                <div className="checklist-content">
-                                                    <h4>Prepare Your Questions</h4>
-                                                    <p>Note down your top 3 questions or concerns to make the most of your consultation time.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Document Vault Prompt */}
-                                        <div className="vault-prompt" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/verification'}>
-                                            <div className="vault-icon">
-                                                <FileText size={24} />
-                                            </div>
-                                            <div className="vault-content" style={{ flex: 1 }}>
-                                                <h4>Speed Up Your Consultation</h4>
-                                                <p>Upload your transcripts to your Document Vault now so your expert can review them before you meet.</p>
-                                                <a href="/verification" className="vault-link" onClick={(e) => e.stopPropagation()}>
-                                                    Go to Document Vault <ChevronRight size={16} />
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        {/* Primary Action */}
-                                        <div style={{ textAlign: 'center', marginTop: 'var(--space-8)' }}>
+                                        {/* Final Action */}
+                                        <div style={{ textAlign: 'center', marginTop: '48px', paddingTop: '32px', borderTop: '1px solid #F1F5F9' }}>
                                             <button
                                                 onClick={() => window.location.href = '/'}
-                                                className="btn btn-primary"
                                                 style={{
-                                                    padding: '16px 40px',
+                                                    padding: '16px 48px',
                                                     fontSize: '16px',
-                                                    borderRadius: '14px',
-                                                    fontWeight: 800,
-                                                    background: '#0D9488',
+                                                    borderRadius: '16px',
+                                                    fontWeight: 900,
+                                                    background: '#1E293B',
                                                     color: 'white',
                                                     border: 'none',
-                                                    boxShadow: '0 4px 14px rgba(13, 148, 136, 0.3)'
+                                                    boxShadow: '0 10px 25px rgba(30, 41, 59, 0.2)',
+                                                    transition: 'all 0.2s'
                                                 }}
                                             >
-                                                Go to My Dashboard
+                                                Return to Dashboard
                                             </button>
                                         </div>
                                     </div>
