@@ -65,6 +65,29 @@ const logPreview = (info) => {
 };
 
 const SENDER_EMAIL = process.env.SMTP_FROM || '"Apex Horizons" <info@apexhorizons.com>';
+const ADMIN_NOTIFY_EMAIL = process.env.ADMIN_EMAIL || 'info.apexhorizons23@gmail.com';
+
+// Send an internal admin notification for any app event
+const sendAdminNotification = async (subject, details) => {
+    await ensureTransporter();
+    const content = `
+        <div style="font-family: monospace; background: #1E293B; color: #94A3B8; padding: 24px; border-radius: 12px; font-size: 13px; line-height: 1.8;">
+            <p style="color: #2DD4BF; font-size: 16px; font-weight: 900; margin: 0 0 16px;">🔔 Admin Notification</p>
+            ${Object.entries(details).map(([k, v]) => `<p style="margin: 4px 0;"><span style="color: #38BDF8; font-weight: 700;">${k}:</span> <span style="color: #F1F5F9;">${v}</span></p>`).join('')}
+            <p style="color: #64748B; font-size: 11px; margin-top: 20px;">Sent at: ${new Date().toISOString()}</p>
+        </div>
+    `;
+    try {
+        return transporter.sendMail({
+            from: SENDER_EMAIL,
+            to: ADMIN_NOTIFY_EMAIL,
+            subject: `[Apex Admin] ${subject}`,
+            html: getBaseTemplate(content, `Admin Alert: ${subject}`)
+        });
+    } catch (err) {
+        console.error('[EMAIL] Failed to send admin notification:', err.message);
+    }
+};
 
 const APP_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
@@ -137,10 +160,12 @@ const sendWelcomeEmail = async (to, fullName) => {
     const info = await transporter.sendMail({
         from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: `Welcome to Apex Horizons, ${firstName}! Your global journey starts here. 🎓`,
         html: getBaseTemplate(content, "Welcome to Apex Horizons!")
     });
     logPreview(info);
+    sendAdminNotification('New User Registered', { Name: fullName, Email: to }).catch(() => {});
     return info;
 };
 
@@ -169,6 +194,7 @@ const sendVerificationEmail = async (to, fullName, token) => {
     const info = await transporter.sendMail({
         from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: "Verify your Apex Horizons account ✉️",
         html: getBaseTemplate(content, "Almost There!")
     });
@@ -199,10 +225,12 @@ const sendPasswordResetEmail = async (to, fullName, token) => {
     const info = await transporter.sendMail({
         from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: "Reset your Apex Horizons password 🔒",
         html: getBaseTemplate(content, "Password Reset Request")
     });
     logPreview(info);
+    sendAdminNotification('Password Reset Requested', { Email: to, User: fullName }).catch(() => {});
     return info;
 };
 
@@ -216,12 +244,14 @@ const sendBookingConfirmationEmail = async (to, studentName, consultantName, dat
         <p>Please ensure you've uploaded all relevant documents before the meeting to maximize your session value.</p>
         <a href="${APP_URL}/my-bookings" style="${emailStyles.button}">View Booking Details</a>
     `;
-    return transporter.sendMail({
+    transporter.sendMail({
         from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: `Session Confirmed: ${consultantName}`,
         html: getBaseTemplate(content, "Booking Successfully Secured")
     });
+    sendAdminNotification('New Appointment Booked', { Student: studentName, Consultant: consultantName, Date: date, Time: time }).catch(() => {});
 };
 
 const sendRejectionEmail = async (to, studentName, documentName, reason) => {
@@ -237,12 +267,14 @@ const sendRejectionEmail = async (to, studentName, documentName, reason) => {
         </ol>
         <a href="${APP_URL}/verification" style="${emailStyles.button}">Update Credentials</a>
     `;
-    return transporter.sendMail({
-        from: '"Apex Horizons Verification" <verify@apexhorizons.com>',
+    transporter.sendMail({
+        from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: `Action Required: ${documentName}`,
         html: getBaseTemplate(content, "Document Verification Update")
     });
+    sendAdminNotification('Document Rejected', { Student: studentName, Document: documentName, Reason: reason }).catch(() => {});
 };
 
 const sendConsultantAcceptanceEmail = async (to, studentName, consultantName, meetingLink) => {
@@ -255,9 +287,10 @@ const sendConsultantAcceptanceEmail = async (to, studentName, consultantName, me
         <a href="${meetingLink}" style="${emailStyles.button}">Join Now</a>
     `;
     return transporter.sendMail({
-        from: '"Apex Horizons Sessions" <sessions@apexhorizons.com>',
+        from: SENDER_EMAIL,
         to,
-        subject: `Meeting Secured: ${consultantName} is waiting`,
+        bcc: ADMIN_NOTIFY_EMAIL,
+        subject: `Meeting Secured: ${studentName} is waiting`,
         html: getBaseTemplate(content, "Strategic Session Live")
     });
 };
@@ -269,7 +302,7 @@ const sendNudgeEmail = async (to, studentName) => {
         <a href="${APP_URL}/verification" style="${emailStyles.button}">Resume Application</a>
     `;
     return transporter.sendMail({
-        from: '"Apex Horizons Goals" <dreams@apexhorizons.com>',
+        from: SENDER_EMAIL,
         to,
         subject: `Your future won't wait, ${studentName}!`,
         html: getBaseTemplate(content, "Keep Your Momentum")
@@ -327,8 +360,9 @@ const sendReminderEmail = async (to, studentName, consultantName, topic, time, m
     `;
 
     return transporter.sendMail({
-        from: '"Apex Horizons Reminders" <reminders@apexhorizons.com>',
+        from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: `Happening Soon: Your Consultation with ${consultantName} 🎥`,
         html: getBaseTemplate(content, "Consultation Countdown: 1 Hour Left")
     });
@@ -343,12 +377,14 @@ const sendCongratulationsEmail = async (to, studentName) => {
         </div>
         <a href="${APP_URL}/consultation" style="${emailStyles.button}">Book Final Strategy Session</a>
     `;
-    return transporter.sendMail({
-        from: '"Apex Horizons Excellence" <success@apexhorizons.com>',
+    transporter.sendMail({
+        from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: `You're 100% Verified! 🎉`,
         html: getBaseTemplate(content, "Full Verification Achieved")
     });
+    sendAdminNotification('User Fully Verified', { Student: studentName, Email: to }).catch(() => {});
 };
 
 const sendPaymentSuccessEmail = async (to, studentName, consultantName, date, time, amount, meetingLink, orderId) => {
@@ -382,12 +418,14 @@ const sendPaymentSuccessEmail = async (to, studentName, consultantName, date, ti
         <p>Best Regards,<br/>The Apex Horizons Team</p>
     `;
 
-    return transporter.sendMail({
-        from: '"Apex Horizons Payments" <payments@apexhorizons.com>',
+    transporter.sendMail({
+        from: SENDER_EMAIL,
         to,
+        bcc: ADMIN_NOTIFY_EMAIL,
         subject: `Confirmed: Your Session & Payment Receipt 🏛️`,
         html: getBaseTemplate(content, "Payment & Booking Success")
     });
+    sendAdminNotification('Payment Received', { Student: studentName, Consultant: consultantName, Date: date, Time: time, Amount: `$${amount}`, OrderId: `#${orderId}` }).catch(() => {});
 };
 
 module.exports = {
@@ -400,5 +438,6 @@ module.exports = {
     sendConsultantAcceptanceEmail,
     sendNudgeEmail,
     sendReminderEmail,
-    sendPaymentSuccessEmail
+    sendPaymentSuccessEmail,
+    sendAdminNotification
 };

@@ -171,7 +171,7 @@ export default function LandingLayout({ children }) {
                         <div>
                             <h4 style={{ fontSize: 'var(--text-sm)', fontWeight: 700, marginBottom: 'var(--space-4)', color: 'white', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact Us</h4>
                             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-                                <li style={{ color: '#94A3B8', fontSize: 'var(--text-sm)' }}>Email: info@apexhorizons.com</li>
+                                <li style={{ color: '#94A3B8', fontSize: 'var(--text-sm)' }}>Email: info.apexhorizons23@gmail.com</li>
                                 <li style={{ color: '#94A3B8', fontSize: 'var(--text-sm)' }}>Phone: +1 234 567 890</li>
                             </ul>
                         </div>
