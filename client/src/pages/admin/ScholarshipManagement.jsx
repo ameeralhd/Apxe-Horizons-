@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function ScholarshipManagement() {
     const [scholarships, setScholarships] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -24,7 +26,7 @@ export default function ScholarshipManagement() {
     const fetchScholarships = async () => {
         setLoading(true);
         try {
-            const res = await axios.get('http://localhost:5000/api/scholarships');
+            const res = await axios.get(`${API_BASE_URL}/api/scholarships`);
             setScholarships(res.data);
         } catch (error) {
             console.error('Failed to fetch scholarships', error);
@@ -77,9 +79,9 @@ export default function ScholarshipManagement() {
             }
 
             if (editingId) {
-                await axios.put(`http://localhost:5000/api/scholarships/${editingId}`, payload, { headers });
+                await axios.put(`${API_BASE_URL}/api/scholarships/${editingId}`, payload, { headers });
             } else {
-                await axios.post('http://localhost:5000/api/scholarships', payload, { headers });
+                await axios.post(`${API_BASE_URL}/api/scholarships`, payload, { headers });
             }
             
             fetchScholarships();
@@ -94,7 +96,7 @@ export default function ScholarshipManagement() {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this scholarship?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/scholarships/${id}`, {
+                await axios.delete(`${API_BASE_URL}/api/scholarships/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 fetchScholarships();

@@ -29,7 +29,8 @@ export default function ScholarshipsPage() {
     useEffect(() => {
         const fetchScholarships = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/scholarships');
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+                const res = await axios.get(`${apiUrl}/api/scholarships`);
                 setScholarshipsData(res.data);
             } catch (error) {
                 console.error('Error fetching scholarships:', error);
