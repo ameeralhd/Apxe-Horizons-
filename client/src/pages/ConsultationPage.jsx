@@ -297,7 +297,8 @@ export default function ConsultationPage() {
                 const data = await res.json();
                 // Brief delay for the loading experience as requested
                 setTimeout(() => {
-                    navigate(`/payment/${data.appointment.id}`);
+                    setStep(6);
+                    setRedirecting(false);
                 }, 1500);
             } else {
                 setRedirecting(false); // Reset redirecting if booking fails

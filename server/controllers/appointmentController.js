@@ -101,7 +101,7 @@ exports.createAppointment = async (req, res) => {
             time: normalizedTime,
             topic: topic || 'General Consultation',
             documentPath,
-            status: 'pending'
+            status: 'confirmed' // Set directly to confirmed since it's free now
         });
 
         console.log('[CreateAppointment] Step 3: Sending emails...');
