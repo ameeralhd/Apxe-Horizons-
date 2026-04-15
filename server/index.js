@@ -39,6 +39,7 @@ app.use('/api/expert', require('./routes/expertRoutes'));
 app.use('/api/resources', require('./routes/resourceRoutes'));
 app.use('/api/templates', require('./routes/templateRoutes'));
 app.use('/api/dynamic-content', require('./routes/dynamicContentRoutes'));
+app.use('/api/scholarships', require('./routes/scholarshipRoutes'));
 
 app.get('/', (req, res) => {
     res.send('Apex Horizons API is running');

@@ -16,6 +16,7 @@ const Transaction = require('./Transaction');
 const Resource = require('./Resource');
 const DocumentTemplate = require('./DocumentTemplate');
 const TemplateFavorite = require('./TemplateFavorite');
+const Scholarship = require('./Scholarship');
 
 // User Associations
 User.hasMany(Appointment, { foreignKey: 'userId' });
@@ -89,5 +90,6 @@ module.exports = {
     Transaction,
     Resource,
     DocumentTemplate,
-    TemplateFavorite
+    TemplateFavorite,
+    Scholarship
 };

@@ -15,6 +15,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ApplicantManagement from './pages/admin/ApplicantManagement';
 import VerificationQueue from './pages/admin/VerificationQueue';
 import ConsultantManagement from './pages/admin/ConsultantManagement';
+import ScholarshipManagement from './pages/admin/ScholarshipManagement';
 import ConsultantDashboard from './pages/consultant/ConsultantDashboard'; // We'll keep this as a legacy or fallback for now
 import ExpertDashboard from './pages/expert/ExpertDashboard';
 import ExpertAvailability from './pages/expert/ExpertAvailability';
@@ -118,6 +119,7 @@ function App() {
         <Route path="applicants" element={<ApplicantManagement />} />
         <Route path="verification" element={<VerificationQueue />} />
         <Route path="consultants" element={<ConsultantManagement />} />
+        <Route path="scholarships" element={<ScholarshipManagement />} />
         <Route path="resource-templates" element={<ResourceTemplates />} />
         <Route path="media-manager" element={<MediaManager />} />
         <Route path="reviews" element={<ReviewModeration />} />

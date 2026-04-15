@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import {
     Search, Filter, BookOpen, Clock, MapPin, DollarSign,
     Bookmark, BookmarkCheck, ChevronDown, ChevronUp, ExternalLink,
@@ -8,160 +9,10 @@ import {
     X, Check
 } from 'lucide-react';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SCHOLARSHIP DATA
-// ─────────────────────────────────────────────────────────────────────────────
-const SCHOLARSHIPS = [
-    {
-        id: 1,
-        name: 'Rhodes Scholarship',
-        university: 'University of Oxford',
-        country: 'UK', flag: '🇬🇧',
-        field: 'Any Field',
-        level: 'Masters',
-        fundingType: 'Full Ride',
-        amount: '£18,180 / year',
-        amountNum: 18180,
-        deadline: '2026-03-10',
-        matchScore: 95,
-        link: 'https://www.rhodeshouse.ox.ac.uk',
-        logo: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=80&q=80',
-        description: 'The most prestigious international scholarship programme, covering all fees and living costs at Oxford.'
-    },
-    {
-        id: 2,
-        name: 'Harvard Merit Scholarship',
-        university: 'Harvard University',
-        country: 'USA', flag: '🇺🇸',
-        field: 'Business',
-        level: 'Masters',
-        fundingType: 'Full Ride',
-        amount: '$78,000 / year',
-        amountNum: 78000,
-        deadline: '2026-04-01',
-        matchScore: 88,
-        link: 'https://www.harvard.edu/scholarships',
-        logo: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=80&q=80',
-        description: 'Need-based and merit awards for outstanding students admitted to Harvard graduate programs.'
-    },
-    {
-        id: 3,
-        name: 'Tsinghua Excellence Award',
-        university: 'Tsinghua University',
-        country: 'China', flag: '🇨🇳',
-        field: 'Engineering',
-        level: 'PhD',
-        fundingType: 'Full Ride',
-        amount: '¥120,000 / year',
-        amountNum: 16500,
-        deadline: '2026-02-28',
-        matchScore: 72,
-        link: 'https://www.tsinghua.edu.cn',
-        logo: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=80&q=80',
-        description: 'Fully-funded PhD scholarship for international students in STEM disciplines.'
-    },
-    {
-        id: 4,
-        name: 'UM International Scholarship',
-        university: 'Universiti Malaya',
-        country: 'Malaysia', flag: '🇲🇾',
-        field: 'Any Field',
-        level: 'Bachelors',
-        fundingType: 'Partial',
-        amount: 'RM 12,000 / year',
-        amountNum: 2600,
-        deadline: '2026-05-15',
-        matchScore: 80,
-        link: 'https://www.um.edu.my',
-        logo: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=80&q=80',
-        description: 'Partial scholarship for top-performing international undergraduates across all faculties.'
-    },
-    {
-        id: 5,
-        name: 'UI Beasiswa Unggulan',
-        university: 'Universitas Indonesia',
-        country: 'Indonesia', flag: '🇮🇩',
-        field: 'Social Sciences',
-        level: 'Bachelors',
-        fundingType: 'Tuition Only',
-        amount: 'Rp 50,000,000 / year',
-        amountNum: 3100,
-        deadline: '2026-03-20',
-        matchScore: 65,
-        link: 'https://www.ui.ac.id',
-        logo: 'https://images.unsplash.com/photo-1523050338692-7b835a07973f?auto=format&fit=crop&w=80&q=80',
-        description: 'Government-backed tuition scholarship for exemplary Indonesian and international students.'
-    },
-    {
-        id: 6,
-        name: 'Chevening Scholarship',
-        university: 'UK Universities',
-        country: 'UK', flag: '🇬🇧',
-        field: 'Any Field',
-        level: 'Masters',
-        fundingType: 'Full Ride',
-        amount: '£28,000 / year',
-        amountNum: 28000,
-        deadline: '2026-02-26',
-        matchScore: 91,
-        link: 'https://www.chevening.org',
-        logo: 'https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=80&q=80',
-        description: 'UK government flagship scholarship covering fees, living allowance, and flights.'
-    },
-    {
-        id: 7,
-        name: 'Fulbright Program',
-        university: 'US Universities',
-        country: 'USA', flag: '🇺🇸',
-        field: 'Any Field',
-        level: 'PhD',
-        fundingType: 'Full Ride',
-        amount: '$45,000 / year',
-        amountNum: 45000,
-        deadline: '2026-06-01',
-        matchScore: 84,
-        link: 'https://foreign.fulbrightonline.org',
-        logo: 'https://images.unsplash.com/photo-1541829070764-84a7d30dee62?auto=format&fit=crop&w=80&q=80',
-        description: 'Prestigious US government exchange program for graduate study, research, and teaching.'
-    },
-    {
-        id: 8,
-        name: 'Chinese Government Scholarship',
-        university: 'Peking University',
-        country: 'China', flag: '🇨🇳',
-        field: 'Engineering',
-        level: 'Masters',
-        fundingType: 'Full Ride',
-        amount: '¥36,000 / year',
-        amountNum: 4950,
-        deadline: '2026-04-30',
-        matchScore: 76,
-        link: 'https://www.campuschina.org',
-        logo: 'https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&w=80&q=80',
-        description: 'Funded by the Chinese Ministry of Education for outstanding international graduate students.'
-    },
-    {
-        id: 9,
-        name: 'UM Presidential Award',
-        university: 'Universiti Malaya',
-        country: 'Malaysia', flag: '🇲🇾',
-        field: 'Technology',
-        level: 'PhD',
-        fundingType: 'Partial',
-        amount: 'RM 24,000 / year',
-        amountNum: 5200,
-        deadline: '2026-07-01',
-        matchScore: 70,
-        link: 'https://www.um.edu.my',
-        logo: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=80&q=80',
-        description: 'Partial scholarship for PhD candidates in technology and innovation streams.'
-    }
-];
-
-const COUNTRIES = ['UK', 'USA', 'Indonesia', 'Malaysia', 'China'];
+const COUNTRIES = ['UK', 'USA', 'Canada', 'Australia', 'Indonesia', 'Malaysia', 'China'];
 const LEVELS = ['Bachelors', 'Masters', 'PhD'];
 const FUNDING_TYPES = ['Full Ride', 'Partial', 'Tuition Only'];
-const FIELDS = ['Any Field', 'Business', 'Engineering', 'Social Sciences', 'Technology'];
+const FIELDS = ['Any Field', 'Business', 'Engineering', 'Social Sciences', 'Technology', 'Medicine'];
 
 function daysUntil(dateStr) {
     const diff = new Date(dateStr) - new Date();
@@ -172,6 +23,23 @@ function daysUntil(dateStr) {
 // PAGE COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 export default function ScholarshipsPage() {
+    const [scholarshipsData, setScholarshipsData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        const fetchScholarships = async () => {
+            try {
+                const res = await axios.get('http://localhost:5000/api/scholarships');
+                setScholarshipsData(res.data);
+            } catch (error) {
+                console.error('Error fetching scholarships:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchScholarships();
+    }, []);
+
     const [search, setSearch] = useState('');
     const [filterCountry, setFilterCountry] = useState([]);
     const [filterLevel, setFilterLevel] = useState([]);
@@ -190,7 +58,7 @@ export default function ScholarshipsPage() {
     const toggleSaved = (id) => setSaved(prev => prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]);
 
     const filtered = useMemo(() => {
-        let list = SCHOLARSHIPS;
+        let list = scholarshipsData;
         if (matchMeOn) list = list.filter(s => s.matchScore >= 80);
         if (search.trim()) list = list.filter(s =>
             s.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -201,7 +69,7 @@ export default function ScholarshipsPage() {
         if (filterFunding.length) list = list.filter(s => filterFunding.includes(s.fundingType));
         if (filterField.length) list = list.filter(s => filterField.includes(s.field) || (filterField.includes('Any Field') && true));
         return list;
-    }, [search, filterCountry, filterLevel, filterFunding, filterField, matchMeOn]);
+    }, [search, filterCountry, filterLevel, filterFunding, filterField, matchMeOn, scholarshipsData]);
 
     const activeFilters = filterCountry.length + filterLevel.length + filterFunding.length + filterField.length;
 
@@ -331,7 +199,11 @@ export default function ScholarshipsPage() {
                             </div>
                         </div>
 
-                        {filtered.length === 0 ? (
+                        {loading ? (
+                             <div style={{ textAlign: 'center', padding: '80px 0', color: '#64748B' }}>
+                                Loading scholarships...
+                             </div>
+                        ) : filtered.length === 0 ? (
                             <div style={{ textAlign: 'center', padding: '80px 0', background: 'white', borderRadius: '20px', border: '1px solid #E2E8F0' }}>
                                 <Search size={40} color="#CBD5E1" style={{ display: 'block', margin: '0 auto 12px' }} />
                                 <p style={{ fontWeight: 700, color: '#1E293B', margin: '0 0 6px' }}>No scholarships found</p>
@@ -373,7 +245,7 @@ function ScholarshipCard({ scholarship: s, index, isSaved, onSave }) {
     const isUrgent = days >= 0 && days <= 7;
     const isExpired = days < 0;
 
-    const deadlineLabel = isExpired ? 'Expired' : isUrgent ? `Closing in ${days} day${days === 1 ? '' : 's'}` : new Date(s.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const deadlineLabel = isExpired ? 'Expired' : isUrgent ? `Closing in $` + `{days} day$` + `{days === 1 ? '' : 's'}` : new Date(s.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     const fundingColors = {
         'Full Ride': { bg: '#DCFCE7', color: '#166534' },
