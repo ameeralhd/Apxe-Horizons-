@@ -58,7 +58,8 @@ app.use((err, req, res, next) => {
 });
 
 // Sync DB and Start Server
-sequelize.sync().then(async () => {
+const syncOptions = process.env.DATABASE_URL ? { alter: true } : {};
+sequelize.sync(syncOptions).then(async () => {
     // Ensure Admin User Exists
     try {
         const User = require('./models/User');

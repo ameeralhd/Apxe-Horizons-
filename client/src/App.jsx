@@ -28,6 +28,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ScholarshipsPage from './pages/ScholarshipsPage';
+import ProductsPage from './pages/ProductsPage';
 import './App.css';
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
       <Route path="/scholarships" element={<ScholarshipsPage />} />
+      <Route path="/products" element={<ProductsPage />} />
       <Route path="/experts" element={<ExpertSelection />} />
       <Route path="/consultation" element={
         <ProtectedRoute>
