@@ -10,7 +10,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use((req, res, next) => {
+  // Set COOP to allow popups for auth flows
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  next();
+});
 app.use(express.json());
 // Serve static uploads
 app.use('/uploads', express.static('public/uploads'));

@@ -155,20 +155,21 @@ export default function VerificationPage() {
         formData.append('category', selectedCategory);
         formData.append('documentType', documentType);
         try {
-            // 1. Retrieve token securely from localStorage
+            // Verify that a token exists before proceeding
             const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("No login token found! Redirecting user to login screen...");
+                // TODO: redirect to login page, e.g., navigate('/login')
+                return;
+            }
 
-            // 2. Correctly structured asynchronous API call using backticks
+            // 2. Correctly structured API call for multipart upload
             const response = await fetch(getApiUrl("/api/documents/analyze"), {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ 
-                    // Ensure your payload passes matching file metadata here
-                    formData: formData 
-                })
+                body: formData
             });
 
             const result = await response.json();
