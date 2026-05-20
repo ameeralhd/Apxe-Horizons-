@@ -163,7 +163,14 @@ export default function VerificationPage() {
             });
             const result = await res.json();
             setDocuments(prev => prev.map(d => d.id === docId
-                ? { ...d, status: result.status === 'verified' ? 'verified' : 'error', feedback: result.feedback, issues: result.issues || [], uploadDate: new Date().toLocaleDateString() }
+                ? { 
+                    ...d, 
+                    status: result.status, 
+                    feedback: result.feedback, 
+                    rejectionReason: result.rejectionReason, 
+                    issues: result.issues || [], 
+                    uploadDate: new Date().toLocaleDateString() 
+                  }
                 : d
             ));
         } catch {
@@ -528,7 +535,7 @@ function VaultRow({ doc, onUpload, isLast }) {
     const [showFeedback, setShowFeedback] = useState(false);
 
     const rawStatus = doc.status === 'analyzing' ? 'analyzing' :
-        doc.status === 'error' ? 'rejected' :
+        (doc.status === 'error' || doc.status === 'rejected') ? 'rejected' :
             doc.status === 'verified' ? 'verified' :
                 doc.status === 'pending' ? 'pending' : 'missing';
 
@@ -604,6 +611,20 @@ function VaultRow({ doc, onUpload, isLast }) {
                         cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px'
                     }}>
                         <Eye size={12} /> View
+                    </button>
+                )}
+                {rawStatus === 'rejected' && doc.rejectionReason === 'rejected' && (
+                    <button 
+                        onClick={() => window.location.href = '/consultation'}
+                        style={{
+                            padding: '6px 12px', borderRadius: '8px',
+                            background: '#EF4444', color: 'white', border: 'none',
+                            fontSize: '11px', fontWeight: 700, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '4px',
+                            boxShadow: '0 2px 4px rgba(239, 68, 68, 0.2)'
+                        }}
+                    >
+                        <UserCheck size={12} /> Support Consultant
                     </button>
                 )}
                 {rawStatus !== 'analyzing' && (

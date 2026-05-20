@@ -22,9 +22,9 @@ async function verifyUpload() {
         console.log('Generated JWT Token successfully.');
 
         // 3. Create a dummy file for testing
-        const dummyFilePath = path.join(__dirname, 'test_upload.txt');
-        fs.writeFileSync(dummyFilePath, 'This is a test document for verification.');
-        console.log('Created dummy file: test_upload.txt');
+        const dummyFilePath = path.join(__dirname, 'approved_test_upload.pdf');
+        fs.writeFileSync(dummyFilePath, 'This is a test PDF document for verification.');
+        console.log('Created dummy file: approved_test_upload.pdf');
 
         // 4. Prepare FormData equivalent for node fetch
         // Since we are testing the API logic, we can also just call the controller or hit the endpoint
@@ -34,7 +34,10 @@ async function verifyUpload() {
         const FormData = (await import('form-data')).default;
 
         const form = new FormData();
-        form.append('file', fs.createReadStream(dummyFilePath));
+        form.append('file', fs.createReadStream(dummyFilePath), {
+            filename: 'approved_test_upload.pdf',
+            contentType: 'application/pdf'
+        });
         form.append('documentType', 'Test Verification');
         form.append('category', 'scholarship');
 
