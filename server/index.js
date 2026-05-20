@@ -58,40 +58,81 @@ app.use((err, req, res, next) => {
 });
 
 // Sync DB and Start Server
+// Start Server Immediately to avoid port binding / unresponsiveness issues
+const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+
+    // Start background automation services
+    startHeartbeat();
+
+    // Trigger nudges once a day (simplified mock for demo/prod prep)
+    setInterval(triggerNudges, 24 * 60 * 60 * 1000);
+});
+
+// Sync DB and Seed Admin Users in background
 const syncOptions = process.env.DATABASE_URL ? { alter: true } : {};
 sequelize.sync(syncOptions).then(async () => {
-    // Ensure Admin User Exists
+    console.log('✅ Database connected and synchronized successfully.');
+
+    // Ensure Admin Users Exist (Multiple common ones for convenience)
     try {
         const User = require('./models/User');
         const bcrypt = require('bcryptjs');
-        const adminEmail = 'joinapex@horizons-pex.com';
-        const existingAdmin = await User.findOne({ where: { email: adminEmail } });
         
-        if (!existingAdmin) {
-            const hashedPassword = await bcrypt.hash('Apex13189956@join', 10);
-            await User.create({
+        const adminsToSeed = [
+            {
                 name: 'Admin User',
-                email: adminEmail,
-                password: hashedPassword,
-                role: 'admin',
-                isVerified: true,
+                email: 'joinapex@horizons-pex.com',
+                password: 'Apex13189956@join',
                 phone: '+0000000000'
-            });
-            console.log('✅ Default admin user seeded successfully.');
+            },
+            {
+                name: 'Apex Admin',
+                email: 'admin@apexhorizons.com',
+                password: 'admin123',
+                phone: '+1234567890'
+            },
+            {
+                name: 'System Admin',
+                email: 'admin@apex.com',
+                password: 'password123',
+                phone: '+1112223333'
+            }
+        ];
+
+        for (const adminInfo of adminsToSeed) {
+            const existingAdmin = await User.findOne({ where: { email: adminInfo.email } });
+            if (!existingAdmin) {
+                const hashedPassword = await bcrypt.hash(adminInfo.password, 10);
+                await User.create({
+                    name: adminInfo.name,
+                    email: adminInfo.email,
+                    password: hashedPassword,
+                    role: 'admin',
+                    isVerified: true,
+                    phone: adminInfo.phone
+                });
+                console.log(`✅ Default admin user seeded successfully: ${adminInfo.email}`);
+            } else {
+                // Ensure they are marked as verified and admin
+                let updated = false;
+                if (!existingAdmin.isVerified) {
+                    existingAdmin.isVerified = true;
+                    updated = true;
+                }
+                if (existingAdmin.role !== 'admin') {
+                    existingAdmin.role = 'admin';
+                    updated = true;
+                }
+                if (updated) {
+                    await existingAdmin.save();
+                    console.log(`✅ Admin status updated/verified for: ${adminInfo.email}`);
+                }
+            }
         }
     } catch (seedErr) {
-        console.error('❌ Error seeding admin user:', seedErr.message);
+        console.error('❌ Error seeding admin users:', seedErr.message);
     }
-
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-
-        // Start background automation services
-        startHeartbeat();
-
-        // Trigger nudges once a day (simplified mock for demo/prod prep)
-        setInterval(triggerNudges, 24 * 60 * 60 * 1000);
-    });
 }).catch(err => {
-    console.error('Unable to connect to the database:', err);
+    console.error('❌ Unable to connect to the database:', err.message);
 });
