@@ -21,6 +21,8 @@ services:
           property: connectionString
       - key: GOOGLE_CLIENT_ID
         value: 608132465176-igsovdtn4bkc8qt6up0ik8s540qqb9cl.apps.googleusercontent.com
+      - key: N8N_WEBHOOK_URL
+        sync: false
 
   # Frontend Static Site
   - type: web

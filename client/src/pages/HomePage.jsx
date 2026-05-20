@@ -14,6 +14,7 @@ import { getApiUrl } from '../utils/apiConfig';
 export default function HomePage() {
     const token = localStorage.getItem('token');
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+    const [preselectedDocType, setPreselectedDocType] = useState('Other');
 
     let user = {};
     try {
@@ -26,7 +27,23 @@ export default function HomePage() {
     }
 
     // --- STATE ---
-    const [dashboardStatus, setDashboardStatus] = useState({ consultations: 0, verificationPercent: 0, academicStatus: 'In Progress' });
+    const [dashboardStatus, setDashboardStatus] = useState({ 
+        consultations: 0, 
+        verificationPercent: 0, 
+        academicStatus: 'In Progress',
+        profileProgress: { percentage: 0, tasks: [] }
+    });
+
+    const refreshDashboard = async () => {
+        try {
+            if (!token) return;
+            const headers = { 'Authorization': `Bearer ${token}` };
+            const statusRes = await fetch(getApiUrl('/api/dashboard/status'), { headers });
+            if (statusRes.ok) setDashboardStatus(await statusRes.json());
+        } catch (err) {
+            console.error('Error refreshing dashboard:', err);
+        }
+    };
     const [newsTicker, setNewsTicker] = useState(null);
     const [unis, setUnis] = useState([]);
     const [eliteUnis, setEliteUnis] = useState([]);
@@ -657,8 +674,14 @@ export default function HomePage() {
                         }}
                     />
                     {/* Zero-State Onboarding Checklist */}
-                    {dashboardStatus.verificationPercent === 0 && (
-                        <OnboardingChecklist />
+                    {dashboardStatus.profileProgress && dashboardStatus.profileProgress.percentage < 100 && (
+                        <OnboardingChecklist 
+                            profileProgress={dashboardStatus.profileProgress}
+                            onUploadClick={(docType) => {
+                                setPreselectedDocType(docType);
+                                setIsUploadModalOpen(true);
+                            }}
+                        />
                     )}
                 </div>
 
@@ -1097,7 +1120,14 @@ export default function HomePage() {
                 officialLink={selectedVideo?.officialLink}
             />
 
-            {isUploadModalOpen && <UploadCenter isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} />}
+            {isUploadModalOpen && (
+                <UploadCenter 
+                    isOpen={isUploadModalOpen} 
+                    onClose={() => setIsUploadModalOpen(false)} 
+                    defaultDocType={preselectedDocType}
+                    onUploadSuccess={refreshDashboard}
+                />
+            )}
         </Layout>
     );
 }
@@ -2055,8 +2085,9 @@ if (typeof document !== 'undefined') {
     document.head.appendChild(styleSheet);
 }
 
-function UploadCenter({ isOpen, onClose }) {
+function UploadCenter({ isOpen, onClose, defaultDocType = 'Other', onUploadSuccess }) {
     const [file, setFile] = useState(null);
+    const [docType, setDocType] = useState(defaultDocType);
     const [uploading, setUploading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
@@ -2091,7 +2122,7 @@ function UploadCenter({ isOpen, onClose }) {
 
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('documentType', 'Dashboard Upload');
+        formData.append('documentType', docType);
         formData.append('category', 'scholarship');
 
         try {
@@ -2112,6 +2143,7 @@ function UploadCenter({ isOpen, onClose }) {
 
             if (res.ok) {
                 setSuccess(true);
+                if (onUploadSuccess) onUploadSuccess();
                 setTimeout(() => {
                     onClose();
                     // Reset state
@@ -2142,6 +2174,31 @@ function UploadCenter({ isOpen, onClose }) {
 
                 {!success ? (
                     <>
+                        <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 800, fontSize: '14px', color: '#1E293B' }}>Document Type</label>
+                            <select 
+                                value={docType}
+                                onChange={(e) => setDocType(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '14px 16px',
+                                    borderRadius: '12px',
+                                    border: '1px solid #E2E8F0',
+                                    background: '#F8FAFC',
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    color: '#1E293B',
+                                    outline: 'none',
+                                    transition: 'all 0.2s',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <option value="Academic Transcript">Academic Transcript</option>
+                                <option value="English Proficiency Test">English Proficiency Test</option>
+                                <option value="Identity Document">Identity Document</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
                         <div
                             className="dropzone"
                             onDragOver={(e) => e.preventDefault()}
@@ -2404,12 +2461,25 @@ function AdmissionsGuideCTA({ isLoggedIn }) {
     );
 }
 
-function OnboardingChecklist() {
-    const checklistItems = [
-        { id: 1, label: 'Complete your Profile', icon: <Users size={18} />, completed: true },
-        { id: 2, label: 'Upload your Passport/ID', icon: <Upload size={18} />, completed: false, link: '/verification' },
-        { id: 3, label: 'Watch a University Tour Video', icon: <Play size={18} />, completed: false, link: '#university-discovery' }
-    ];
+function OnboardingChecklist({ profileProgress, onUploadClick }) {
+    const tasks = profileProgress?.tasks || [];
+
+    const getIconForLabel = (label, completed) => {
+        if (completed) return <ShieldCheck size={20} />;
+        if (label.includes('Phone')) return <Users size={18} />;
+        if (label.includes('Transcript')) return <GraduationCap size={18} />;
+        if (label.includes('English')) return <FileCheck size={18} />;
+        if (label.includes('Identity')) return <Upload size={18} />;
+        return <File size={18} />;
+    };
+
+    const handleItemClick = (item) => {
+        if (item.label === 'Personal Details (Phone)') {
+            window.location.href = item.link || '/settings';
+        } else if (!item.completed && onUploadClick) {
+            onUploadClick(item.label);
+        }
+    };
 
     return (
         <div style={{
@@ -2446,9 +2516,9 @@ function OnboardingChecklist() {
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-                    {checklistItems.map((item) => (
+                    {tasks.map((item, idx) => (
                         <div
-                            key={item.id}
+                            key={idx}
                             style={{
                                 background: 'rgba(255,255,255,0.05)',
                                 padding: '20px',
@@ -2458,9 +2528,9 @@ function OnboardingChecklist() {
                                 alignItems: 'center',
                                 gap: '16px',
                                 transition: 'all 0.2s',
-                                cursor: item.link ? 'pointer' : 'default'
+                                cursor: item.completed ? 'default' : 'pointer'
                             }}
-                            onClick={() => item.link && (item.link.startsWith('#') ? document.getElementById(item.link.substring(1))?.scrollIntoView({ behavior: 'smooth' }) : (window.location.href = item.link))}
+                            onClick={() => handleItemClick(item)}
                         >
                             <div style={{
                                 width: '40px',
@@ -2472,7 +2542,7 @@ function OnboardingChecklist() {
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                {item.completed ? <ShieldCheck size={20} /> : item.icon}
+                                {getIconForLabel(item.label, item.completed)}
                             </div>
                             <div style={{ flex: 1 }}>
                                 <p style={{
