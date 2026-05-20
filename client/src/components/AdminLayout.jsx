@@ -64,7 +64,7 @@ export default function AdminLayout() {
     return (
         <div className="admin-layout">
             {/* Sidebar */}
-            <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+            <aside className={`admin-sidebar ${sidebarOpen ? 'active open' : 'closed'}`}>
                 <div className="admin-sidebar-header">
                     <h2>Apex Horizons</h2>
                     <span className="admin-badge">Admin</span>
