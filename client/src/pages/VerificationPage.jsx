@@ -155,25 +155,29 @@ export default function VerificationPage() {
         formData.append('category', selectedCategory);
         formData.append('documentType', documentType);
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(getApiUrl('/api/documents/analyze'), {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${token}` },
-                body: formData
+            // 1. Retrieve token securely from localStorage
+            const token = localStorage.getItem("token");
+
+            // 2. Correctly structured asynchronous API call using backticks
+            const response = await fetch(getApiUrl("/api/documents/analyze"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ 
+                    // Ensure your payload passes matching file metadata here
+                    formData: formData 
+                })
             });
-            const result = await res.json();
-            setDocuments(prev => prev.map(d => d.id === docId
-                ? { 
-                    ...d, 
-                    status: result.status, 
-                    feedback: result.feedback, 
-                    rejectionReason: result.rejectionReason, 
-                    issues: result.issues || [], 
-                    uploadDate: new Date().toLocaleDateString() 
-                  }
-                : d
-            ));
-        } catch {
+
+            const result = await response.json();
+            
+            // 3. Update local state array smoothly
+            setDocuments(prev => prev.map(d => d.id === docId ? { ...d, status: result.status } : d));
+
+        } catch (error) {
+            console.error("AI Document submission failed:", error);
             setDocuments(prev => prev.map(d => d.id === docId
                 ? { ...d, status: 'error', feedback: 'Analysis failed. Please try again.', issues: [] }
                 : d
