@@ -195,27 +195,24 @@ export default function VerificationPage() {
             // Debug: Log FormData entries
             for (let [key, value] of n8nFormData.entries()) {
                 console.log('FormData entry:', key, value);
-            }
-    n8nFormData.append('student_id', `STU${result.studentId}`);
-    n8nFormData.append('scholarship_id', `SCH${result.scholarshipId}`);
-    n8nFormData.append('file_url', result.fileUrl);
+                }
 
             // 2. Send payload to our backend proxy which forwards to n8n
-            const verifyResponse = await fetch(getApiUrl('/api/documents/verify'), {
+            const verifyResponse = await fetch("https://apex-horizons-api.onrender.com/api/documents/verify", {
                 method: "POST",
-                body: n8nFormData
+                body: n8nFormData,
             });
-                method: "POST",
-                body: n8nFormData
-            });
+
+
+
 
             if (!verifyResponse.ok) {
                 console.error('Backend proxy failed with status', verifyResponse.status);
                 throw new Error("Failed to route document through backend verification proxy.");
             }
-                console.error('Webhook call failed with status', n8nResponse.status);
-                throw new Error("Failed to route document to the live AI verification webhook.");
-            }
+            
+
+
 
             // 3. Update local state array smoothly with asynchronous handover status
             setDocuments(prev => prev.map(d => d.id === docId ? { 
