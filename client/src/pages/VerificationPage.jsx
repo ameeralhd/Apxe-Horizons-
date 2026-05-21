@@ -159,11 +159,10 @@ export default function VerificationPage() {
             const token = localStorage.getItem("token");
             if (!token) {
                 console.error("No login token found! Redirecting user to login screen...");
-                // TODO: redirect to login page, e.g., navigate('/login')
                 return;
             }
 
-            // 2. Correctly structured API call for multipart upload
+            // 1. Correctly structured API call for registering the upload in our database
             const response = await fetch(getApiUrl("/api/documents/analyze"), {
                 method: "POST",
                 headers: {
@@ -172,15 +171,38 @@ export default function VerificationPage() {
                 body: formData
             });
 
+            if (!response.ok) {
+                throw new Error("Failed to register document on the server.");
+            }
+
             const result = await response.json();
             
-            // 3. Update local state array smoothly
-            setDocuments(prev => prev.map(d => d.id === docId ? { ...d, status: result.status } : d));
+            // 2. Trigger the live production n8n AI verification webhook with binary file & params
+            const n8nFormData = new FormData();
+            n8nFormData.append('file', file);
+            n8nFormData.append('document_id', result.documentId);
+            n8nFormData.append('student_email', result.studentEmail);
+
+            const n8nResponse = await fetch("https://ameer.app.n8n.cloud/webhook/Document-Verification", {
+                method: "POST",
+                body: n8nFormData
+            });
+
+            if (!n8nResponse.ok) {
+                throw new Error("Failed to route document to the live AI verification webhook.");
+            }
+
+            // 3. Update local state array smoothly with asynchronous handover status
+            setDocuments(prev => prev.map(d => d.id === docId ? { 
+                ...d, 
+                status: 'pending', 
+                feedback: 'Your document is being processed by our AI verification team. You will receive an email shortly.'
+            } : d));
 
         } catch (error) {
             console.error("AI Document submission failed:", error);
             setDocuments(prev => prev.map(d => d.id === docId
-                ? { ...d, status: 'error', feedback: 'Analysis failed. Please try again.', issues: [] }
+                ? { ...d, status: 'rejected', feedback: 'Submission failed. Please try again.', issues: [] }
                 : d
             ));
         }
@@ -569,8 +591,8 @@ function VaultRow({ doc, onUpload, isLast }) {
                 <div style={{ minWidth: 0 }}>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: '13px', color: '#1E293B', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{doc.name}</p>
                     {uploadedFile && <p style={{ margin: 0, fontSize: '10px', color: '#94A3B8' }}>{uploadedFile.name} · {uploadedFile.size}</p>}
-                    {doc.feedback && rawStatus === 'rejected' && (
-                        <p style={{ margin: '2px 0 0', fontSize: '10px', color: '#EF4444', fontWeight: 600 }}>{doc.feedback}</p>
+                    {doc.feedback && (rawStatus === 'rejected' || rawStatus === 'pending') && (
+                        <p style={{ margin: '2px 0 0', fontSize: '10px', color: rawStatus === 'rejected' ? '#EF4444' : '#0D9488', fontWeight: 600 }}>{doc.feedback}</p>
                     )}
                 </div>
                 {/* Info Tooltip */}

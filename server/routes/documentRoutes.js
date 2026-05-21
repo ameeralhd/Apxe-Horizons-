@@ -187,83 +187,16 @@ router.post('/analyze', auth.protect, upload.single('file'), async (req, res) =>
             urgency: 'Normal'
         });
 
-        const n8nUrl = process.env.N8N_WEBHOOK_URL;
-        let verdict = 'pending';
-        let feedback = 'Document uploaded and awaiting manual verification by our compliance team.';
-
-        // Call the live n8n AI verification webhook
-        if (n8nUrl && !n8nUrl.includes('your-webhook-id')) {
-            try {
-                const response = await fetch(n8nUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        student_id: req.user.id.toString(),
-                        student_email: req.user.email,
-                        file_url: fileUrl
-                    })
-                });
-
-                if (response.ok) {
-                    const n8nResponse = await response.json();
-                    console.log('n8n webhook response:', n8nResponse);
-                    if (n8nResponse && n8nResponse.verdict) {
-                        verdict = n8nResponse.verdict;
-                    }
-                } else {
-                    console.error('n8n webhook error status:', response.status);
-                }
-            } catch (fetchErr) {
-                console.error('Error calling n8n webhook:', fetchErr);
-            }
-        } else {
-            // Local fallback/debug simulation based on filename cues if webhook URL is not set
-            const fname = req.file.originalname.toLowerCase();
-            if (fname.includes('approved')) {
-                verdict = 'approved';
-            } else if (fname.includes('incomplete')) {
-                verdict = 'incomplete';
-            } else if (fname.includes('rejected')) {
-                verdict = 'rejected';
-            } else {
-                verdict = 'pending';
-            }
-        }
-
-        // Map the n8n verdict to standard database fields
-        let finalStatus = 'pending';
-        let rejectionReason = null;
-
-        if (verdict === 'approved') {
-            finalStatus = 'verified';
-            feedback = 'Your document has been verified successfully by our AI agent!';
-        } else if (verdict === 'incomplete') {
-            finalStatus = 'rejected';
-            rejectionReason = 'incomplete';
-            feedback = 'Warning: Your document is incomplete. Please re-upload with all required fields.';
-        } else if (verdict === 'rejected') {
-            finalStatus = 'rejected';
-            rejectionReason = 'rejected';
-            feedback = 'Your document has been rejected. Please click the button below to connect with a support consultant.';
-        }
-
-        // Persist the verdict state to database
-        await docRecord.update({
-            status: finalStatus,
-            customerFeedback: feedback,
-            rejectionReason: rejectionReason
-        });
-
         res.json({
-            status: finalStatus,
-            feedback: feedback,
-            issues: verdict === 'incomplete' ? ['Missing required fields'] : [],
+            status: 'pending',
+            feedback: 'Your document is being processed by our AI verification team. You will receive an email shortly.',
+            issues: [],
             analyzedAt: new Date().toISOString(),
             documentId: docRecord.id,
-            verdict: verdict
+            studentEmail: req.user.email
         });
     } catch (error) {
-        console.error('Error during analysis:', error);
+        console.error('Error during document registration:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
