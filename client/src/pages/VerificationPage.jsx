@@ -182,6 +182,9 @@ export default function VerificationPage() {
             n8nFormData.append('file', file);
             n8nFormData.append('document_id', result.documentId);
             n8nFormData.append('student_email', result.studentEmail);
+    n8nFormData.append('student_id', `STU${result.studentId}`);
+    n8nFormData.append('scholarship_id', `SCH${result.scholarshipId}`);
+    n8nFormData.append('file_url', result.fileUrl);
 
             const n8nResponse = await fetch("https://ameer.app.n8n.cloud/webhook/Document-Verification", {
                 method: "POST",
@@ -196,7 +199,7 @@ export default function VerificationPage() {
             setDocuments(prev => prev.map(d => d.id === docId ? { 
                 ...d, 
                 status: 'pending', 
-                feedback: 'Your document is being processed by our AI verification team. You will receive an email shortly.'
+                feedback: 'Your document is being processed by our AI verification team. You will receive an email confirmation shortly.'
             } : d));
 
         } catch (error) {

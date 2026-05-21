@@ -193,6 +193,9 @@ router.post('/analyze', auth.protect, upload.single('file'), async (req, res) =>
             issues: [],
             analyzedAt: new Date().toISOString(),
             documentId: docRecord.id,
+            studentId: req.user.id.toString(),
+            scholarshipId: docRecord.id.toString(),
+            fileUrl: fileUrl,
             studentEmail: req.user.email
         });
     } catch (error) {

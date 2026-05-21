@@ -22,7 +22,7 @@ services:
       - key: GOOGLE_CLIENT_ID
         value: 608132465176-igsovdtn4bkc8qt6up0ik8s540qqb9cl.apps.googleusercontent.com
       - key: N8N_WEBHOOK_URL
-        value: https://ameer.app.n8n.cloud/webhook/document-verification
+        value: https://ameer.app.n8n.cloud/webhook/Document-Verification
 
   # Frontend Static Site
   - type: web
