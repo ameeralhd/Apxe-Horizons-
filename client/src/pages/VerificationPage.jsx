@@ -176,22 +176,44 @@ export default function VerificationPage() {
             }
 
             const result = await response.json();
+            // Debug: Log backend response fields
+            console.log('Backend response:', result);
+            // Debug: Ensure required fields are present
+            if (!result.studentId || !result.scholarshipId || !result.fileUrl) {
+                console.warn('Missing expected fields in backend response');
+            }
             
             // 2. Trigger the live production n8n AI verification webhook with binary file & params
+            // Build FormData for n8n webhook
             const n8nFormData = new FormData();
             n8nFormData.append('file', file);
             n8nFormData.append('document_id', result.documentId);
             n8nFormData.append('student_email', result.studentEmail);
+            n8nFormData.append('student_id', `STU${result.studentId}`);
+            n8nFormData.append('scholarship_id', `SCH${result.scholarshipId}`);
+            n8nFormData.append('file_url', result.fileUrl);
+            // Debug: Log FormData entries
+            for (let [key, value] of n8nFormData.entries()) {
+                console.log('FormData entry:', key, value);
+            }
     n8nFormData.append('student_id', `STU${result.studentId}`);
     n8nFormData.append('scholarship_id', `SCH${result.scholarshipId}`);
     n8nFormData.append('file_url', result.fileUrl);
 
-            const n8nResponse = await fetch("https://ameer.app.n8n.cloud/webhook/Document-Verification", {
+            // 2. Send payload to our backend proxy which forwards to n8n
+            const verifyResponse = await fetch(getApiUrl('/api/documents/verify'), {
+                method: "POST",
+                body: n8nFormData
+            });
                 method: "POST",
                 body: n8nFormData
             });
 
-            if (!n8nResponse.ok) {
+            if (!verifyResponse.ok) {
+                console.error('Backend proxy failed with status', verifyResponse.status);
+                throw new Error("Failed to route document through backend verification proxy.");
+            }
+                console.error('Webhook call failed with status', n8nResponse.status);
                 throw new Error("Failed to route document to the live AI verification webhook.");
             }
 

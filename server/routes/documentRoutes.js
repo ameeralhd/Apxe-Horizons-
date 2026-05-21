@@ -11,6 +11,38 @@ router.get('/', auth.protect, documentController.getUserDocuments);
 const REQUIREMENTS = require('../config/requirements');
 const User = require('../models/User');
 
+// POST /api/documents/verify - Proxy to n8n webhook
+router.post('/verify', auth.protect, upload.single('file'), async (req, res) => {
+    try {
+        // Build FormData to forward
+        const FormData = require('form-data');
+        const fs = require('fs');
+        const axios = require('axios');
+        const form = new FormData();
+        // Append file
+        if (req.file) {
+            form.append('file', fs.createReadStream(req.file.path), req.file.originalname);
+        }
+        // Append additional fields expected by n8n
+        const fields = ['student_id', 'scholarship_id', 'file_url', 'student_email', 'document_id'];
+        fields.forEach(f => {
+            if (req.body[f]) {
+                form.append(f, req.body[f]);
+            }
+        });
+        // Forward to n8n webhook
+        const n8nUrl = process.env.N8N_WEBHOOK_URL;
+        const response = await axios.post(n8nUrl, form, {
+            headers: form.getHeaders()
+        });
+        // Return response status to client
+        res.status(response.status).json({ message: 'Webhook forwarded', data: response.data });
+    } catch (err) {
+        console.error('Error proxying to n8n:', err);
+        res.status(500).json({ message: 'Failed to forward to n8n webhook', error: err.message });
+    }
+});
+
 // POST /api/documents/path - Update user's verification path
 router.post('/path', auth.protect, async (req, res) => {
     try {
@@ -189,7 +221,7 @@ router.post('/analyze', auth.protect, upload.single('file'), async (req, res) =>
 
         res.json({
             status: 'pending',
-            feedback: 'Your document is being processed by our AI verification team. You will receive an email shortly.',
+            feedback: 'Your document is being processed by our AI verification team. You will receive an email confirmation shortly.',
             issues: [],
             analyzedAt: new Date().toISOString(),
             documentId: docRecord.id,
