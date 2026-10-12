@@ -34,7 +34,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma']
 }));
 
 // Set COOP to allow popups for auth flows
@@ -93,9 +93,6 @@ app.use((err, req, res, next) => {
 const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 
-    // Start background automation services
-    startHeartbeat();
-
     // Trigger nudges once a day (simplified mock for demo/prod prep)
     setInterval(triggerNudges, 24 * 60 * 60 * 1000);
 });
@@ -104,6 +101,10 @@ const server = app.listen(PORT, () => {
 const syncOptions = process.env.DATABASE_URL ? { alter: true } : {};
 sequelize.sync(syncOptions).then(async () => {
     console.log('✅ Database connected and synchronized successfully.');
+
+    // Start background automation services only once the DB schema is ready,
+    // otherwise the first heartbeat run races the sync and errors on missing tables.
+    startHeartbeat();
 
     // Ensure Admin Users Exist (Multiple common ones for convenience)
     try {

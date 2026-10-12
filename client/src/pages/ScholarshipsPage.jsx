@@ -135,7 +135,7 @@ export default function ScholarshipsPage() {
                 </div>
 
                 {/* ── Body: Sidebar + Results ────────────────────────────────── */}
-                <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px', display: 'grid', gridTemplateColumns: '260px 1fr', gap: '24px', alignItems: 'start' }}>
+                <div className="sidebar-content-grid" style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px', display: 'grid', gridTemplateColumns: '260px 1fr', gap: '24px', alignItems: 'start' }}>
 
                     {/* ── Sidebar ─────────────────────────────────────────────── */}
                     <div style={{ background: 'white', borderRadius: '20px', border: '1px solid #E2E8F0', overflow: 'hidden', position: 'sticky', top: '100px' }}>
@@ -191,7 +191,7 @@ export default function ScholarshipsPage() {
 
                     {/* ── Results ─────────────────────────────────────────────── */}
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                        <div className="results-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '8px' }}>
                             <p style={{ fontSize: '14px', color: '#64748B', margin: 0 }}>
                                 Showing <strong style={{ color: '#1E293B' }}>{filtered.length}</strong> scholarships
                             </p>

@@ -4,13 +4,13 @@ import {
     Users,
     FileCheck,
     UserCog,
-    DollarSign,
     LogOut,
     Menu,
     X,
     FolderTree,
     Video,
-    GraduationCap
+    GraduationCap,
+    MessageSquare
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import '../admin-enhanced.css';
@@ -58,7 +58,7 @@ export default function AdminLayout() {
         { path: '/admin/scholarships', icon: <GraduationCap size={20} />, label: 'Scholarships' },
         { path: '/admin/resource-templates', icon: <FolderTree size={20} />, label: 'Resource Templates' },
         { path: '/admin/media-manager', icon: <Video size={20} />, label: 'Media Manager' },
-        { path: '/admin/revenue', icon: <DollarSign size={20} />, label: 'Revenue' }
+        { path: '/admin/reviews', icon: <MessageSquare size={20} />, label: 'Reviews' }
     ];
 
     return (

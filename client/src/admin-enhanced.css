@@ -131,6 +131,9 @@
 
 .admin-main {
     flex: 1;
+    min-width: 0; /* flex items default to min-width: auto, which lets wide
+        content (e.g. data tables) stretch this past the viewport instead of
+        being clipped/scrolled by its own descendants' overflow-x wrappers */
     margin-left: 280px;
     transition: margin-left 0.3s ease;
     min-height: 100vh;
@@ -908,6 +911,37 @@
 .badge-visa { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
 .badge-cv { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
 .badge-research { background: #F5F3FF; color: #5B21B6; border: 1px solid #DDD6FE; }
+
+/* ==================== ADMIN MOBILE OVERFLOW FIXES ====================
+   Most admin pages lay out their header (title + action button) and
+   toolbar (search + filter controls) as a non-wrapping flex row with a
+   fixed-width search box, and the Approval Hub uses a fixed-width sidebar.
+   None of that collapses on a phone, so it pushes the whole page wider
+   than the viewport. */
+@media (max-width: 768px) {
+    .admin-page-header,
+    .admin-page-header > div:first-child {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .approval-hub-filters {
+        flex-wrap: wrap;
+    }
+
+    .approval-hub-content {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .queue-sidebar {
+        width: 100%;
+    }
+
+    .scholarship-search-box {
+        width: 100% !important;
+    }
+}
 
 @keyframes fadeIn {
     from { opacity: 0; }

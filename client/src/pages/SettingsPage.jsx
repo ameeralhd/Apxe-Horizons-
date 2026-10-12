@@ -105,7 +105,7 @@ export default function SettingsPage() {
                         <p style={{ color: 'var(--color-text-muted)' }}>Manage your profile, security settings, and preferences.</p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', gap: 'var(--space-8)' }}>
+                    <div className="sidebar-content-grid" style={{ display: 'grid', gridTemplateColumns: '250px 1fr', gap: 'var(--space-8)' }}>
 
                         {/* Sidebar Navigation */}
                         <aside>
