@@ -47,7 +47,7 @@ exports.register = async (req, res) => {
             email: user.email
         });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
@@ -76,7 +76,7 @@ exports.verifyEmail = async (req, res) => {
 
         res.json({ message: 'Email verified successfully! You can now log in.' });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
@@ -103,7 +103,7 @@ exports.login = async (req, res) => {
 
         res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, phone: user.phone, isVerified: user.isVerified } });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
@@ -129,7 +129,7 @@ exports.forgotPassword = async (req, res) => {
 
         res.json(genericMessage);
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -157,7 +157,7 @@ exports.resetPassword = async (req, res) => {
 
         res.json({ message: 'Password has been reset successfully. You can now log in with your new password.' });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -191,7 +191,7 @@ exports.updateProfile = async (req, res) => {
             user: { id: user.id, name: user.name, email: user.email, role: user.role, phone: user.phone }
         });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
@@ -249,7 +249,7 @@ exports.googleLogin = async (req, res) => {
             }
         });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Google authentication failed', error: err.message });
     }
 };
@@ -271,7 +271,7 @@ exports.debugVerify = async (req, res) => {
         console.log(`🔧 [DEBUG] User ${email} verified via Developer Bypass.`);
         res.json({ message: 'User verified successfuly' });
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
         res.status(500).json({ message: 'Server Error' });
     }
 };
