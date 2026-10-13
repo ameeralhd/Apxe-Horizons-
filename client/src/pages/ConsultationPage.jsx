@@ -374,7 +374,7 @@ export default function ConsultationPage() {
                         alignItems: 'start'
                     }}>
                         {/* Sidebar Stepper (Desktop) */}
-                        <div style={{
+                        <div className="booking-sidebar-stepper" style={{
                             width: '280px',
                             background: 'white',
                             borderRadius: '24px',

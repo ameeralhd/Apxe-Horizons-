@@ -129,7 +129,9 @@ export default function ScholarshipManagement() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                flexWrap: 'wrap',
+                gap: '20px'
             }}>
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
@@ -162,9 +164,9 @@ export default function ScholarshipManagement() {
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 background: 'white', padding: '16px 24px', borderRadius: '16px',
                 marginBottom: '24px', border: '1px solid #E2E8F0',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.02)'
+                boxShadow: '0 4px 6px rgba(0,0,0,0.02)', flexWrap: 'wrap', gap: '12px'
             }}>
-                <div style={{ position: 'relative', width: '300px' }}>
+                <div className="scholarship-search-box" style={{ position: 'relative', width: '300px' }}>
                     <Search size={18} style={{ position: 'absolute', left: '16px', top: '14px', color: '#64748B' }} />
                     <input
                         type="text"

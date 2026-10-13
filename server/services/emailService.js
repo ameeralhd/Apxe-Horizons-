@@ -9,36 +9,44 @@ let transporterReady = (async () => {
                           process.env.SMTP_USER.includes('your_verified_sender') ||
                           process.env.SMTP_USER === 'your_email@gmail.com';
 
-    if (isPlaceholder) {
-        console.log('⚠️ [EMAIL] Using Ethereal (Test Trap) - SMTP credentials are still placeholders in .env');
-        const testAccount = await nodemailer.createTestAccount();
-        transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
-            auth: {
-                user: testAccount.user,
-                pass: testAccount.pass
-            }
-        });
-    } else {
-        console.log(`📡 [EMAIL] Connecting to real SMTP host: ${process.env.SMTP_HOST}...`);
-        transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: parseInt(process.env.SMTP_PORT) || 587,
-            secure: process.env.SMTP_PORT == 465,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        });
+    try {
+        if (isPlaceholder) {
+            console.log('⚠️ [EMAIL] Using Ethereal (Test Trap) - SMTP credentials are still placeholders in .env');
+            const testAccount = await nodemailer.createTestAccount();
+            transporter = nodemailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: testAccount.user,
+                    pass: testAccount.pass
+                }
+            });
+        } else {
+            console.log(`📡 [EMAIL] Connecting to real SMTP host: ${process.env.SMTP_HOST}...`);
+            transporter = nodemailer.createTransport({
+                host: process.env.SMTP_HOST,
+                port: parseInt(process.env.SMTP_PORT) || 587,
+                secure: process.env.SMTP_PORT == 465,
+                auth: {
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASS
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+            });
+        }
+    } catch (setupErr) {
+        // Never let email setup take the whole server down - auth/registration must keep working
+        // even if the (test or real) mail provider is unreachable.
+        console.error('❌ [EMAIL] Failed to initialize transporter:', setupErr.message);
+        transporter = nodemailer.createTransport({ jsonTransport: true });
+        return false;
     }
 
-    return new Promise((resolve, reject) => {
-        transporter.verify((error, success) => {
+    return new Promise((resolve) => {
+        transporter.verify((error) => {
             if (error) {
                 console.error('❌ [EMAIL] SMTP Connection Error:', error.code, error.message);
                 resolve(false); // Resolve even on error so we don't hang, but log failure

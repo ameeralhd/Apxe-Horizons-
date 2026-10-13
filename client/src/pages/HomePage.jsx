@@ -469,7 +469,7 @@ export default function HomePage() {
                 {/* Expert Chat Preview */}
                 <section style={{ padding: 'var(--space-24) 0', background: 'white' }}>
                     <div className="container">
-                        <div style={{
+                        <div className="expert-chat-preview-card" style={{
                             background: 'linear-gradient(135deg, #F0FDFA 0%, #FFFFFF 100%)',
                             borderRadius: '32px',
                             padding: '60px',
@@ -480,7 +480,7 @@ export default function HomePage() {
                             gap: 'var(--space-12)',
                             flexWrap: 'wrap'
                         }}>
-                            <div style={{ flex: '1', minWidth: '320px' }}>
+                            <div style={{ flex: '1', minWidth: '320px' }} className="expert-chat-preview-col">
                                 <div style={{ background: '#2DD4BF', color: 'white', display: 'inline-flex', padding: '6px 16px', borderRadius: 'full', fontSize: '12px', fontWeight: 900, marginBottom: '24px' }}>
                                     EXPERT AGENTS ONLINE
                                 </div>
@@ -501,7 +501,7 @@ export default function HomePage() {
                                     <MessageSquare size={20} /> Talk to an Expert Now
                                 </button>
                             </div>
-                            <div style={{ flex: '1', minWidth: '320px', position: 'relative' }}>
+                            <div style={{ flex: '1', minWidth: '320px', position: 'relative' }} className="expert-chat-preview-col">
                                 <div style={{
                                     background: 'white',
                                     borderRadius: '24px',

@@ -148,6 +148,44 @@ button {
   color: var(--color-text-body);
 }
 
+/* Form fields. Several pages (Login, Register, Settings, Payment, ChatWidget)
+   use className="input"/"label" expecting shared base styles; without this,
+   inputs fall back to the browser's intrinsic ~180px default width instead
+   of filling their container, which both looks unpolished and breaks
+   multi-column form layouts (the fixed intrinsic width forces grid/flex
+   tracks wider than the viewport on mobile). */
+.input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--color-text-header);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+}
+
+.input::placeholder {
+  color: var(--color-text-dim);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-header);
+}
+
 .btn-outline:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
@@ -511,5 +549,52 @@ button {
   .cta-group a {
     width: 100% !important;
     text-align: center;
+  }
+
+  /* 7. Collapse fixed-width sidebar + content grids (Settings, Scholarships).
+     minmax(0, 1fr) instead of plain 1fr: a bare 1fr grid track still respects
+     its children's intrinsic min-content width, so wide children (buttons,
+     text) stretch the "collapsed" column right back past the viewport. */
+  .sidebar-content-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  /* 8. Stack promo/CTA cards that use a fixed-width side-by-side flex layout */
+  .admissions-guide-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: center;
+    padding: 24px !important;
+  }
+
+  .admissions-guide-card > div:first-child {
+    flex-direction: column !important;
+    text-align: center;
+  }
+
+  .admissions-guide-card button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* 9. Prevent the expert-chat promo card's fixed padding + min-width floor from overflowing narrow screens */
+  .expert-chat-preview-card {
+    padding: 24px !important;
+  }
+
+  .expert-chat-preview-col {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /* 10. Consultation booking: the 280px sidebar stepper column has nowhere to go
+     on a phone, so collapse to a single column and let the in-card mobile
+     progress bar (already rendered) carry the step indicator instead. */
+  .booking-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .booking-sidebar-stepper {
+    display: none !important;
   }
 }

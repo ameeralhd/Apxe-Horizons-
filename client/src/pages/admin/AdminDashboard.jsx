@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, FileCheck, Calendar, TrendingUp, DollarSign, ArrowUp, ArrowDown, MessageSquare } from 'lucide-react';
+import { Users, FileCheck, Calendar, TrendingUp, FolderOpen, ArrowUp, ArrowDown, MessageSquare } from 'lucide-react';
 import '../../admin-enhanced.css';
 import { getApiUrl } from '../../utils/apiConfig';
 
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
                             </Link>
                             <Link to="/admin/resource-templates" className="action-tile">
                                 <div className="action-tile-icon" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
-                                    <DollarSign size={32} />
+                                    <FolderOpen size={32} />
                                 </div>
                                 <h4>Resource Hub</h4>
                                 <p className="action-tile-count">Manage templates</p>

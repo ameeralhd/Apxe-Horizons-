@@ -239,7 +239,7 @@ export default function ResourceTemplates() {
                         }}
                     />
                 </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                     {['All', 'Academic', 'Visa', 'Research', 'CV'].map(cat => (
                         <button 
                             key={cat}

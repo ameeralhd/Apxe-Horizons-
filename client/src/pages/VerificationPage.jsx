@@ -335,12 +335,12 @@ export default function VerificationPage() {
                     </div>
 
                     {/* ── Main content: Vault + Sidebar ───────────────────────── */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '24px', alignItems: 'start' }}>
+                    <div className="sidebar-content-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '24px', alignItems: 'start' }}>
 
                         {/* LEFT: The Vault ──────────────────────────────────────── */}
                         <div>
                             {/* Category Tabs */}
-                            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
                                 {categories.map(cat => (
                                     <button key={cat.id} onClick={() => handleCategoryChange(cat.id)}
                                         style={{
