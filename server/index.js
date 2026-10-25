@@ -166,5 +166,9 @@ sequelize.sync(syncOptions).then(async () => {
         console.error('❌ Error seeding admin users:', seedErr.message);
     }
 }).catch(err => {
-    console.error('❌ Unable to connect to the database:', err.message);
+    // Log the full error (not just .message) - a Postgres sync/alter failure
+    // here leaves the live schema out of sync with the models, which then
+    // makes every subsequent query (including login/register) throw a
+    // generic 500 with no indication of why.
+    console.error('❌ Unable to sync database schema:', err);
 });

@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
     Users,
@@ -10,7 +10,8 @@ import {
     FolderTree,
     Video,
     GraduationCap,
-    MessageSquare
+    MessageSquare,
+    ExternalLink
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import '../admin-enhanced.css';
@@ -18,6 +19,7 @@ import '../admin-enhanced.css';
 export default function AdminLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const navigate = useNavigate();
+    const location = useLocation();
 
     // Get user from localStorage
     let user = {};
@@ -61,12 +63,17 @@ export default function AdminLayout() {
         { path: '/admin/reviews', icon: <MessageSquare size={20} />, label: 'Reviews' }
     ];
 
+    const currentPage = navItems.find(item =>
+        item.end ? location.pathname === item.path : location.pathname.startsWith(item.path)
+    );
+    const userInitial = (user?.name || 'A').charAt(0).toUpperCase();
+
     return (
         <div className="admin-layout">
             {/* Sidebar */}
             <aside className={`admin-sidebar ${sidebarOpen ? 'active open' : 'closed'}`}>
                 <div className="admin-sidebar-header">
-                    <h2>Apex Horizons</h2>
+                    <h2><span className="admin-logo-accent">Apex</span> Horizons</h2>
                     <span className="admin-badge">Admin</span>
                 </div>
 
@@ -78,7 +85,7 @@ export default function AdminLayout() {
                             end={item.end}
                             className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}
                         >
-                            {item.icon}
+                            <span className="admin-nav-icon">{item.icon}</span>
                             <span>{item.label}</span>
                         </NavLink>
                     ))}
@@ -86,9 +93,9 @@ export default function AdminLayout() {
 
                 <div className="admin-sidebar-footer">
                     <div className="admin-user-info">
-                        <div className="admin-user-avatar">{user?.name?.charAt(0)}</div>
+                        <div className="admin-user-avatar">{userInitial}</div>
                         <div>
-                            <p className="admin-user-name">{user?.name}</p>
+                            <p className="admin-user-name">{user?.name || 'Admin'}</p>
                             <p className="admin-user-role">Administrator</p>
                         </div>
                     </div>
@@ -106,12 +113,19 @@ export default function AdminLayout() {
                     <button
                         className="admin-menu-toggle"
                         onClick={() => setSidebarOpen(!sidebarOpen)}
+                        aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
                     >
-                        {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                        {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <h1 className="admin-page-title">Admin Command Center</h1>
+                    <div className="admin-topbar-title">
+                        <h1 className="admin-page-title">{currentPage?.label || 'Admin'}</h1>
                         <span className="interaction-heartbeat" title="Interface Active"></span>
+                    </div>
+                    <div className="admin-topbar-actions">
+                        <a href="/" target="_blank" rel="noopener noreferrer" className="admin-view-site-link">
+                            <span>View Live Site</span> <ExternalLink size={14} />
+                        </a>
+                        <div className="admin-topbar-avatar" title={user?.name || 'Admin'}>{userInitial}</div>
                     </div>
                 </header>
 
