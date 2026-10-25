@@ -136,7 +136,7 @@ export default function ScholarshipManagement() {
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
                         <GraduationCap color="#38BDF8" size={32} />
-                        <h1 style={{ fontSize: '28px', fontWeight: 800, margin: 0 }}>Scholarship Command Center</h1>
+                        <h1 style={{ fontSize: '28px', fontWeight: 800, margin: 0, color: 'white' }}>Scholarship Command Center</h1>
                     </div>
                     <p style={{ color: '#94A3B8', margin: 0, fontSize: '15px' }}>
                         Manage premium scholarship opportunities available to users globally.
